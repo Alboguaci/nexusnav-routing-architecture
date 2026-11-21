@@ -1,0 +1,143 @@
+@startuml 01_componentes
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam dpi 300
+skinparam nodesep 45
+skinparam ranksep 40
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 11
+skinparam roundCorner 8
+skinparam shadowing false
+skinparam componentStyle uml2
+
+skinparam package {
+    BackgroundColor #F8F9FA
+    BorderColor #495057
+    FontColor #212529
+    FontStyle bold
+}
+
+skinparam component {
+    BackgroundColor #FFFFFF
+    BorderColor #1B4965
+    BorderThickness 1.2
+    FontColor #0B2545
+}
+
+skinparam interface {
+    BackgroundColor #62B6CB
+    BorderColor #1B4965
+    FontColor #0B2545
+}
+
+skinparam database {
+    BackgroundColor #E9ECEF
+    BorderColor #495057
+    FontColor #212529
+}
+
+title **Diagrama de Componentes: Arquitectura NexusNav**\n//Sistema de Navegación y Enrutamiento Multimodal Dinámico//
+
+package "Capa de Presentación y Clientes" {
+    [Mobile Vehicle Client] as MVC
+    [Fleet Operations Dashboard] as FOD
+    [IoT Traffic Sensor Gateway] as ITS
+}
+
+package "Capa de Borde y Acceso Unificado" {
+    component "API Gateway & Router\n(HTTP/REST & WebSocket)" as GW
+    interface "REST /route" as IRouteAPI
+    interface "WS /traffic-stream" as IWS
+}
+
+package "Capa de Coordinación y Control Transaccional" {
+    component "Navigation Session Manager" as NSM
+    component "Command Dispatcher & History\n«Pattern Command»" as CDH
+    component "Traffic Event Bus\n«Pattern Observer (Subject)»" as TEB
+}
+
+package "Capa del Motor de Navegación y Enrutamiento" {
+    component "Route Engine Context\n«Pattern Strategy (Context)»" as REC
+    interface "IRoutingStrategy" as IRS
+    
+    package "Estrategias de Enrutamiento Intercambiables" {
+        component "A* Dynamic Heuristic\nStrategy" as AS_Strat
+        component "Dijkstra Exact\nStrategy" as DJ_Strat
+        component "Contraction Hierarchy\nStrategy" as CH_Strat
+        component "Multi-Objective Pareto\nStrategy" as MO_Strat
+    }
+    
+    component "Spatial Route Cache\n(LRU / TTL Subtree Cache)" as SRC
+}
+
+package "Capa de Topología y Datos Espaciales" {
+    component "Topology Network Manager\n«Pattern Composite»" as TNM
+    interface "INetworkComponent" as INC
+    
+    package "Estructura Jerárquica de Red" {
+        component "ZoneCluster\n(Macro-Sectores Urbanos)" as ZC
+        component "RoadSegment\n(Tramos Viales y Nodos)" as RS
+    }
+    
+    component "Route Traversal Provider\n«Pattern Iterator»" as RTP
+    interface "IRouteIterator" as IRI
+    database "Spatial Road Graph Store\n(Indexed Adjacency Graph)" as SRG
+}
+
+' Relaciones de Clientes a Gateway
+MVC --> IRouteAPI : Petición de cálculo\ny maniobras
+FOD --> IRouteAPI : Monitoreo y despacho
+ITS --> IWS : Telemetría de congestión
+
+GW -- IRouteAPI
+GW -- IWS
+
+' Relaciones Gateway a Coordinación
+GW --> NSM : Sesiones de viaje activas
+GW --> CDH : Envío de comandos (Navigate, Detour)
+GW --> TEB : Ingestión de eventos de tráfico
+
+' Relaciones de Coordinación al Motor
+CDH --> REC : Ejecuta cálculo / recálculo
+NSM --> TEB : Suscribe observador de ruta activa
+TEB ..> NSM : Notifica incidente en tramo
+
+' Motor de Enrutamiento y Estrategias
+REC ..> IRS : Delega ejecución
+IRS <|.. AS_Strat : Implementa
+IRS <|.. DJ_Strat : Implementa
+IRS <|.. CH_Strat : Implementa
+IRS <|.. MO_Strat : Implementa
+
+REC --> SRC : Consulta / Almacena rutas
+REC --> TNM : Solicita subgrafo podado
+
+' Topología y Compuestos
+TNM ..> INC : Administra jerarquía
+INC <|.. ZC : Compuesto
+INC <|.. RS : Hoja
+ZC o--> INC : Contiene subsectores / tramos
+TNM --> SRG : Carga topología y pesos
+
+' Generación de Maniobras e Iterador
+REC --> RTP : Construye ruta calculada
+RTP ..> IRI : Expone secuencia paso a paso
+MVC ..> IRI : Consume maniobras progresivas
+
+note right of REC
+  **Táctica de Rendimiento:**
+  Selección dinámica de estrategia
+  según tamaño de grafo y latencia objetivo:
+  * Local: A* Heurístico
+  * Macro: Contraction Hierarchies
+  * Multiobjetivo: Pareto Time/Energy
+end note
+
+note bottom of TEB
+  **Táctica de Eficiencia:**
+  Desacopla sensores del cliente.
+  Re-enrutamiento proactivo O(K)
+  sin sobrecarga de sondeo (polling).
+end note
+
+@enduml

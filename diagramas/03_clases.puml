@@ -1,0 +1,279 @@
+@startuml 03_clases
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam dpi 300
+skinparam nodesep 35
+skinparam ranksep 35
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 10
+skinparam roundCorner 6
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+skinparam class {
+    BackgroundColor #FFFFFF
+    BorderColor #1B4965
+    BorderThickness 1.2
+    FontColor #0B2545
+    HeaderBackgroundColor #EDF2F4
+}
+
+skinparam interface {
+    BackgroundColor #E0FBFC
+    BorderColor #1B4965
+    BorderThickness 1.2
+    FontColor #0B2545
+}
+
+title **Diagrama de Clases: Lógica Interna e Integración de Patrones de Diseño (NexusNav)**\n//Strategy, Observer, Command, Iterator y Composite//
+
+' ==========================================
+' PATRÓN STRATEGY
+' ==========================================
+package "Patrón Strategy: Algoritmos de Enrutamiento" #F8F9FA {
+    interface IRoutingStrategy <<interface>> {
+        + calculate_route(graph: RoadGraph, origin: str, destination: str, constraints: dict): RouteResult
+        + get_strategy_name(): str
+        + get_complexity(): str
+    }
+
+    class RoutingEngine <<Context>> {
+        - current_strategy: IRoutingStrategy
+        - topology_manager: TopologyManager
+        - cache_manager: RouteCache
+        + set_strategy(strategy: IRoutingStrategy): void
+        + compute(origin: str, destination: str, constraints: dict): RoutePath
+        + invalidate_cache(affected_edges: list): void
+    }
+
+    class AStarRoutingStrategy <<ConcreteStrategy>> {
+        - heuristic_type: str
+        - dynamic_congestion_alpha: float
+        + calculate_route(graph: RoadGraph, origin: str, destination: str, constraints: dict): RouteResult
+        - heuristic(u: str, v: str, graph: RoadGraph): float
+    }
+
+    class DijkstraRoutingStrategy <<ConcreteStrategy>> {
+        + calculate_route(graph: RoadGraph, origin: str, destination: str, constraints: dict): RouteResult
+    }
+
+    class ContractionHierarchyStrategy <<ConcreteStrategy>> {
+        - contracted_levels: dict
+        + calculate_route(graph: RoadGraph, origin: str, destination: str, constraints: dict): RouteResult
+        + preprocess_graph(graph: RoadGraph): void
+    }
+
+    class MultiObjectiveParetoStrategy <<ConcreteStrategy>> {
+        - weights: dict
+        + calculate_route(graph: RoadGraph, origin: str, destination: str, constraints: dict): RouteResult
+        - evaluate_pareto_front(candidates: list): RouteResult
+    }
+
+    IRoutingStrategy <|.. AStarRoutingStrategy
+    IRoutingStrategy <|.. DijkstraRoutingStrategy
+    IRoutingStrategy <|.. ContractionHierarchyStrategy
+    IRoutingStrategy <|.. MultiObjectiveParetoStrategy
+    RoutingEngine o--> "1" IRoutingStrategy : "delega cálculo"
+}
+
+' ==========================================
+' PATRÓN COMMAND
+' ==========================================
+package "Patrón Command: Acciones y Transacciones de Navegación" #F1F3F5 {
+    interface INavigationCommand <<interface>> {
+        + execute(): CommandResult
+        + undo(): void
+        + get_timestamp(): datetime
+        + get_command_id(): str
+    }
+
+    class CommandInvoker <<Invoker>> {
+        - history: list<INavigationCommand>
+        - redo_stack: list<INavigationCommand>
+        + execute_command(cmd: INavigationCommand): CommandResult
+        + rollback_last(): void
+        + get_audit_trail(): list
+    }
+
+    class NavigateCommand <<ConcreteCommand>> {
+        - engine: RoutingEngine
+        - origin: str
+        - destination: str
+        - result_path: RoutePath
+        + execute(): CommandResult
+        + undo(): void
+    }
+
+    class AddWaypointCommand <<ConcreteCommand>> {
+        - engine: RoutingEngine
+        - current_path: RoutePath
+        - waypoint: str
+        - previous_path: RoutePath
+        + execute(): CommandResult
+        + undo(): void
+    }
+
+    class RecalculateDetourCommand <<ConcreteCommand>> {
+        - engine: RoutingEngine
+        - original_path: RoutePath
+        - blocked_edges: list<str>
+        - detour_path: RoutePath
+        + execute(): CommandResult
+        + undo(): void
+    }
+
+    INavigationCommand <|.. NavigateCommand
+    INavigationCommand <|.. AddWaypointCommand
+    INavigationCommand <|.. RecalculateDetourCommand
+    CommandInvoker o--> "*" INavigationCommand : "administra y audita"
+    NavigateCommand --> RoutingEngine : "utiliza"
+    AddWaypointCommand --> RoutingEngine : "utiliza"
+    RecalculateDetourCommand --> RoutingEngine : "utiliza"
+}
+
+' ==========================================
+' PATRÓN OBSERVER
+' ==========================================
+package "Patrón Observer: Telemetría e Incidentes de Tráfico" #E9ECEF {
+    interface ITrafficSubject <<interface>> {
+        + register_observer(observer: ITrafficObserver, edge_ids: list<str>): void
+        + remove_observer(observer: ITrafficObserver): void
+        + notify_incident(event: TrafficIncidentEvent): void
+    }
+
+    interface ITrafficObserver <<interface>> {
+        + on_traffic_event(event: TrafficIncidentEvent): void
+        + get_observer_id(): str
+    }
+
+    class TrafficEventBus <<ConcreteSubject>> {
+        - edge_subscriptions: dict<str, list<ITrafficObserver>>
+        - active_incidents: dict<str, float>
+        + register_observer(observer: ITrafficObserver, edge_ids: list<str>): void
+        + remove_observer(observer: ITrafficObserver): void
+        + notify_incident(event: TrafficIncidentEvent): void
+    }
+
+    class RouteMonitorObserver <<ConcreteObserver>> {
+        - session_id: str
+        - client_id: str
+        - current_route: RoutePath
+        - invoker: CommandInvoker
+        - reroute_threshold: float
+        + on_traffic_event(event: TrafficIncidentEvent): void
+        + update_route(new_route: RoutePath): void
+        - calculate_cost_delta(event: TrafficIncidentEvent): float
+    }
+
+    class FleetTelemetryObserver <<ConcreteObserver>> {
+        - dashboard_service: any
+        + on_traffic_event(event: TrafficIncidentEvent): void
+    }
+
+    ITrafficSubject <|.. TrafficEventBus
+    ITrafficObserver <|.. RouteMonitorObserver
+    ITrafficObserver <|.. FleetTelemetryObserver
+    TrafficEventBus o--> "*" ITrafficObserver : "notifica eventos"
+    RouteMonitorObserver --> CommandInvoker : "dispara RecalculateDetour"
+}
+
+' ==========================================
+' PATRÓN COMPOSITE
+' ==========================================
+package "Patrón Composite: Jerarquía Topológica Espacial" #F8F9FA {
+    interface INetworkComponent <<interface>> {
+        + get_id(): str
+        + get_total_weight(): float
+        + contains_node(node_id: str): bool
+        + extract_subgraph(): RoadGraph
+    }
+
+    class RoadSegment <<Leaf>> {
+        - segment_id: str
+        - start_node: str
+        - end_node: str
+        - base_distance: float
+        - free_flow_speed: float
+        - congestion_multiplier: float
+        + get_id(): str
+        + get_total_weight(): float
+        + contains_node(node_id: str): bool
+        + extract_subgraph(): RoadGraph
+    }
+
+    class ZoneCluster <<Composite>> {
+        - zone_id: str
+        - centroid_coord: tuple
+        - children: list<INetworkComponent>
+        + add_component(component: INetworkComponent): void
+        + remove_component(component: INetworkComponent): void
+        + get_id(): str
+        + get_total_weight(): float
+        + contains_node(node_id: str): bool
+        + extract_subgraph(): RoadGraph
+    }
+
+    class TopologyManager {
+        - root_cluster: ZoneCluster
+        + prune_search_space(origin: str, dest: str): RoadGraph
+        + update_segment_weight(segment_id: str, multiplier: float): void
+    }
+
+    INetworkComponent <|.. RoadSegment
+    INetworkComponent <|.. ZoneCluster
+    ZoneCluster o--> "*" INetworkComponent : "contiene elementos"
+    TopologyManager --> ZoneCluster : "administra macrozonas"
+    RoutingEngine --> TopologyManager : "solicita grafo podado"
+}
+
+' ==========================================
+' PATRÓN ITERATOR
+' ==========================================
+package "Patrón Iterator: Travesía de Maniobras y Ruta" #F1F3F5 {
+    interface IRouteIterator <<interface>> {
+        + has_next(): bool
+        + next(): ManeuverStep
+        + current(): ManeuverStep
+        + reset(): void
+    }
+
+    class ManeuverIterator <<ConcreteIterator>> {
+        - path_reference: RoutePath
+        - cursor_index: int
+        + has_next(): bool
+        + next(): ManeuverStep
+        + current(): ManeuverStep
+        + reset(): void
+    }
+
+    class RoutePath <<Aggregate>> {
+        - route_id: str
+        - total_distance: float
+        - total_duration: float
+        - nodes: list<str>
+        - edges: list<str>
+        - maneuvers: list<ManeuverStep>
+        + get_iterator(): IRouteIterator
+        + add_maneuver(step: ManeuverStep): void
+        + get_edges(): list<str>
+    }
+
+    class ManeuverStep {
+        - instruction: str
+        - distance_meters: float
+        - estimated_seconds: float
+        - target_street: str
+        - turn_direction: str
+    }
+
+    IRouteIterator <|.. ManeuverIterator
+    RoutePath --> IRouteIterator : "crea iterador"
+    ManeuverIterator o--> RoutePath : "recorre colección"
+    RoutePath *--> "*" ManeuverStep : "compuesto por"
+}
+
+' Relación entre RoutePath y el Sistema
+RoutingEngine ..> RoutePath : "produce"
+RouteMonitorObserver o--> RoutePath : "monitorea"
+
+@enduml

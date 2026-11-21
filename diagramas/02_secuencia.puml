@@ -1,0 +1,171 @@
+@startuml 02_secuencia
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam dpi 300
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 11
+skinparam roundCorner 6
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+skinparam participant {
+    BackgroundColor #FFFFFF
+    BorderColor #1B4965
+    BorderThickness 1.2
+    FontColor #0B2545
+    FontStyle bold
+}
+
+skinparam actor {
+    BackgroundColor #FFFFFF
+    BorderColor #1B4965
+    FontColor #0B2545
+}
+
+skinparam note {
+    BackgroundColor #FEFEEA
+    BorderColor #C4B000
+    FontColor #333333
+}
+
+skinparam box {
+    BackgroundColor #F8F9FA
+    BorderColor #ADB5BD
+}
+
+title **Diagrama de Secuencia: Flujo de Navegación, Enrutamiento y Recálculo Dinámico**\n//Interacción temporal de patrones Strategy, Command, Observer, Composite e Iterator//
+
+actor "Cliente Móvil\n(Vehículo)" as Client
+participant "API Gateway\n(Facade)" as Gateway
+box "Gobierno y Transacciones" #F1F3F5
+    participant "Command\nDispatcher" as Invoker
+    participant "NavigateCommand\n«Command»" as Cmd
+    participant "RouteMonitor\n«Observer»" as Obs
+end box
+
+box "Motor de Navegación y Topología" #E9ECEF
+    participant "RouteEngine\n«Context»" as Engine
+    participant "TopologyManager\n«Composite»" as Topology
+    participant "AStarDynamic\n«Strategy»" as Strategy
+    participant "RoutePath\n& Cache" as PathCache
+end box
+
+box "Eventos y Telemetría Asíncrona" #DEE2E6
+    participant "TrafficEventBus\n«Subject»" as EventBus
+    actor "Sensor IoT\n(Tráfico Urbano)" as Sensor
+end box
+
+autonumber "<b>[00]</b>"
+
+== Fase 1: Solicitud y Cálculo de Ruta Inicial ==
+Client -> Gateway : POST /route (origen, destino, criterios)
+activate Gateway
+
+Gateway -> Invoker : dispatch(NavigateCommand(origen, destino))
+activate Invoker
+
+Invoker -> Cmd : execute()
+activate Cmd
+
+Cmd -> Engine : computeRoute(origen, destino, criteria)
+activate Engine
+
+Engine -> PathCache : checkCache(origen, destino)
+activate PathCache
+PathCache --> Engine : Cache Miss (o ruta desactualizada)
+deactivate PathCache
+
+Engine -> Topology : getPrunedSearchSpace(origen, destino)
+activate Topology
+note over Topology
+  **Patrón Composite:**
+  Agrupa tramos viales en ZoneClusters.
+  Poda 53.79% de nodos irrelevantes
+  (subgrafo podado) antes de la búsqueda.
+end note
+Topology --> Engine : Subgrafo jerárquico podado
+deactivate Topology
+
+Engine -> Strategy : findOptimalPath(subgrafo, criterios)
+activate Strategy
+Strategy --> Engine : Segmentos calculados (ruta óptima base)
+deactivate Strategy
+
+Engine -> PathCache : storeCache(origen, destino, ruta)
+Engine --> Cmd : RoutePath instanciado
+deactivate Engine
+
+Cmd -> Obs : create(RoutePath, ClientID)
+activate Obs
+Cmd -> EventBus : registerObserver(Obs, RoutePath.edges)
+activate EventBus
+EventBus --> Cmd : Suscripción confirmada
+deactivate EventBus
+
+Cmd --> Invoker : Resultado exitoso (RoutePath)
+deactivate Cmd
+Invoker --> Gateway : RoutePath
+deactivate Invoker
+
+Gateway --> Client : 200 OK + RoutePayload (Maniobras iniciales)
+deactivate Gateway
+
+== Fase 2: Navegación Paso a Paso con Iterador ==
+Client -> Client : iterator = RoutePath.getIterator()
+activate Client
+loop Mientras iterator.hasNext()
+    Client -> Client : maneuver = iterator.next()
+    note over Client
+      **Patrón Iterator:**
+      Desacopla la estructura del grafo.
+      El cliente consume maniobras (giro,
+      avance) de forma secuencial y limpia.
+    end note
+end
+deactivate Client
+
+== Fase 3: Evento de Congestión y Recálculo Dinámico Proactivo ==
+Sensor -> EventBus : publishTrafficIncident(edgeID: "E-14", delay: +15min)
+activate EventBus
+
+EventBus -> EventBus : matchAffectedRoutes(edgeID)
+EventBus -> Obs : onTrafficEvent(edgeID, delay)
+activate Obs
+deactivate EventBus
+
+Obs -> Obs : evaluateImpact(currentPosition, remainingRoute)
+note over Obs
+  **Patrón Observer:**
+  Detecta si el retraso sobrepasa
+  el umbral crítico (ΔC > τ).
+  Dispara recálculo automático.
+end note
+
+alt Impacto Crítico (ΔC > τ)
+    Obs -> Invoker : dispatch(RecalculateDetourCommand(RoutePath, E-14))
+    activate Invoker
+    Invoker -> Engine : computeDetour(currentPosition, destino, avoidEdges=[E-14])
+    activate Engine
+    Engine -> Strategy : findOptimalPath(subgrafo_con_desvío)
+    activate Strategy
+    Strategy --> Engine : Nuevo RoutePath (desvío óptimo)
+    deactivate Strategy
+    Engine --> Invoker : RoutePath_Actualizado
+    deactivate Engine
+    
+    Invoker -> Obs : updateRoute(RoutePath_Actualizado)
+    Invoker -> Gateway : pushRouteUpdate(ClientID, RoutePath_Actualizado)
+    activate Gateway
+    Gateway -> Client : WS Event: ROUTE_REROUTED (nuevo camino + maniobras)
+    deactivate Gateway
+    deactivate Invoker
+    
+    Client -> Client : iterator.resetWithNewPath(RoutePath_Actualizado)
+    note over Client: El vehículo navega la ruta alternativa sin frenar
+else Impacto Leve (ΔC <= τ)
+    Obs -> Gateway : pushTrafficAlert(ClientID, "Demora menor: 2 min")
+    Gateway -> Client : Notificación pasiva (mantener rumbo)
+end
+deactivate Obs
+
+@enduml

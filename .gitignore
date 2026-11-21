@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Archivos temporales de Word y del sistema
+~$*
+*.tmp
+informe/_export_tmp.pdf
+informe/convertir_pdf.log
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp

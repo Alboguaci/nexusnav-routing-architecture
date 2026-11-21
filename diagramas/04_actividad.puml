@@ -1,0 +1,112 @@
+@startuml 04_actividad
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam dpi 300
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 11
+skinparam roundCorner 8
+skinparam shadowing false
+
+skinparam activity {
+    BackgroundColor #FFFFFF
+    BorderColor #1B4965
+    BorderThickness 1.2
+    FontColor #0B2545
+    DiamondBackgroundColor #E0FBFC
+    DiamondBorderColor #1B4965
+    BarColor #1B4965
+}
+
+skinparam note {
+    BackgroundColor #FEFEEA
+    BorderColor #C4B000
+    FontColor #333333
+}
+
+title **Diagrama de Actividad: Flujo Algorítmico de Navegación y Decisión Dinámica**\n//Evaluación de estrategias, poda topológica y recálculo proactivo por eventos de tráfico//
+
+start
+
+:Recibir solicitud de navegación (Origen, Destino, Restricciones);
+
+:Validar coordenadas y normalizar restricciones operativas;
+
+if (¿Existe ruta válida en caché espacial (LRU/TTL)?) then (Sí [Cache Hit])
+    :Recuperar RoutePath desde caché;
+else (No [Cache Miss])
+    partition "Poda Topológica (Patrón Composite)" {
+        :Identificar ZoneClusters de origen y destino;
+        if (¿Origen y Destino en la misma macrozona?) then (Sí)
+            :Extraer subgrafo local exclusivo del sector;
+        else (No)
+            :Construir corredor inter-zonas podando tramos capilares irrelevantes;
+            note right
+              Reduce el espacio de búsqueda
+              en un 53.79 % de nodos evaluados.
+            end note
+        endif
+    }
+
+    partition "Selección de Algoritmo (Patrón Strategy)" {
+        if (¿Criterio seleccionado?) then (Menor Tiempo con Tráfico Dinámico)
+            :Instanciar **AStarRoutingStrategy**\n(Heurística euclidiana + factor de congestión alfa);
+        elseif (Ruta Exacta / Pequeño Grafo) then (Exactitud Estricta)
+            :Instanciar **DijkstraRoutingStrategy**;
+        elseif (Corredor Macro / Larga Distancia) then (Alta Velocidad)
+            :Instanciar **ContractionHierarchyStrategy**;
+        else (Equilibrio Tiempo vs. Energía)
+            :Instanciar **MultiObjectiveParetoStrategy**;
+        endif
+    }
+
+    :Ejecutar algoritmo sobre subgrafo podado;
+    :Construir RoutePath con distancias, tiempos y waypoints;
+    :Almacenar RoutePath en SpatialRouteCache;
+endif
+
+:Generar lista de maniobras estructuradas (ManeuverSteps);
+
+partition "Suscripción Asíncrona (Patrón Observer)" {
+    :Crear RouteMonitorObserver para la sesión;
+    :Suscribir observador al TrafficEventBus\npara los tramos específicos de la ruta;
+}
+
+:Retornar RoutePath y abrir canal de telemetría con el cliente;
+
+fork
+    partition "Consumo de Maniobras (Patrón Iterator)" {
+        :Obtener ManeuverIterator desde RoutePath;
+        while (¿iterator.hasNext()?) is (Sí)
+            :Despachar siguiente maniobra al conductor;
+            :Avanzar al siguiente segmento vial;
+        endwhile (Llegada a Destino)
+        :Emitir evento de viaje completado;
+    }
+fork again
+    partition "Supervisión Dinámica de Tráfico (Patrón Observer & Command)" {
+        while (¿Viaje en curso?) is (Activo)
+            if (¿Evento de incidente en tramo de la ruta?) then (Sí)
+                :Calcular delta de costo y tiempo (ΔC);
+                if (¿ΔC > Umbral crítico τ?) then (Sí [Demora Severa])
+                    :Emitir **RecalculateDetourCommand** (Patrón Command);
+                    :Invalidar caché del tramo afectado;
+                    :Calcular desvío óptimo desde posición actual (Strategy);
+                    :Actualizar tramos en RouteMonitorObserver;
+                    :Reiniciar cursor del ManeuverIterator con nueva ruta;
+                    :Enviar alerta de re-enrutamiento al vehículo;
+                else (No [Demora Menor])
+                    :Actualizar tiempo estimado (ETA) sin alterar ruta;
+                endif
+            else (No)
+                :Esperar señales de telemetría de red;
+            endif
+        endwhile (Viaje Terminado)
+    }
+end fork
+
+:Desvincular observador del TrafficEventBus;
+:Registrar métricas operativas de la sesión en bitácora;
+
+stop
+
+@enduml
