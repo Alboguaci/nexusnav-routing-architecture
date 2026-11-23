@@ -5,6 +5,7 @@ Diseño corporativo y editorial de alto impacto inspirado en el estilo de refere
 - Esquema de color profesional: Navy / Slate, Blanco / Light Gray, con acentos Teal, Amber, Coral y Blue.
 - Estructuras visuales: tarjetas de pilares con badges circulares, split-screen, matrices de cuadrantes y líneas de tiempo.
 - Integración de diagramas UML de alta resolución y gráficas de benchmarking.
+- Tipografía editorial ampliada y legible para proyecciones y lectura clara.
 - Sin menciones a 'guía', 'rúbrica', 'CETO', 'materia' ni nombres repetitivos en cada diapositiva.
 """
 
@@ -48,7 +49,7 @@ C_NAVY = RGBColor(30, 41, 59)             # Slate 800 (Texto primario)
 C_MUTED = RGBColor(100, 116, 139)         # Slate 500 (Texto secundario)
 C_BODY = RGBColor(51, 65, 85)             # Slate 700 (Cuerpo)
 
-# Acentos temáticos (como en la imagen de referencia)
+# Acentos temáticos
 C_TEAL = RGBColor(13, 148, 136)           # Teal 600 (Acento principal)
 C_TEAL_LIGHT = RGBColor(204, 251, 241)     # Teal 100
 C_AMBER = RGBColor(217, 119, 6)           # Amber 600
@@ -58,6 +59,7 @@ C_CORAL_LIGHT = RGBColor(255, 228, 230)    # Rose 100
 C_BLUE = RGBColor(37, 99, 235)            # Blue 600
 C_BLUE_LIGHT = RGBColor(219, 234, 254)     # Blue 100
 C_INDIGO = RGBColor(79, 70, 229)          # Indigo 600
+C_SKY = RGBColor(14, 165, 233)            # Sky 500
 C_SLATE_HERO = RGBColor(24, 32, 47)       # Dark container
 
 
@@ -73,31 +75,31 @@ def init_presentation() -> Presentation:
 
 def add_slide_header(slide, title: str, kicker: str = "ARQUITECTURA DE SOFTWARE · SISTEMA NEXUSNAV", slide_num: int = None):
     """Renderiza la cabecera editorial unificada con título, categoría y línea divisoria."""
-    # Kicker
-    kicker_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.35), Inches(9.0), Inches(0.3))
+    # Kicker (categoría superior)
+    kicker_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.30), Inches(9.5), Inches(0.28))
     tf_k = kicker_box.text_frame
     tf_k.margin_left = tf_k.margin_right = tf_k.margin_top = tf_k.margin_bottom = 0
     p_k = tf_k.paragraphs[0]
     p_k.text = kicker.upper()
     p_k.font.name = "Arial"
-    p_k.font.size = Pt(8.5)
+    p_k.font.size = Pt(9.5)
     p_k.font.bold = True
     p_k.font.color.rgb = C_TEAL
 
-    # Título principal
-    title_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.58), Inches(10.2), Inches(0.55))
+    # Título principal (tipografía aumentada a 23 pt)
+    title_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.54), Inches(10.6), Inches(0.65))
     tf_t = title_box.text_frame
     tf_t.margin_left = tf_t.margin_right = tf_t.margin_top = tf_t.margin_bottom = 0
     p_t = tf_t.paragraphs[0]
     p_t.text = title
     p_t.font.name = "Arial"
-    p_t.font.size = Pt(21)
+    p_t.font.size = Pt(23)
     p_t.font.bold = True
     p_t.font.color.rgb = C_NAVY_DARK
 
-    # Contador de diapositiva (Pill en la esquina superior derecha)
+    # Contador de diapositiva (Pill estilizada en la esquina superior derecha)
     if slide_num is not None:
-        pill = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(11.733), Inches(0.48), Inches(0.8), Inches(0.36))
+        pill = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(11.6), Inches(0.42), Inches(0.933), Inches(0.38))
         pill.fill.solid()
         pill.fill.fore_color.rgb = C_CARD_ALT
         pill.line.color.rgb = C_BORDER_LIGHT
@@ -108,12 +110,12 @@ def add_slide_header(slide, title: str, kicker: str = "ARQUITECTURA DE SOFTWARE 
         p_num.alignment = PP_ALIGN.CENTER
         p_num.text = f"{slide_num:02d} / 16"
         p_num.font.name = "Arial"
-        p_num.font.size = Pt(9)
+        p_num.font.size = Pt(10)
         p_num.font.bold = True
         p_num.font.color.rgb = C_MUTED
 
     # Línea divisoria elegante
-    line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.8), Inches(1.18), Inches(11.733), Pt(1.2))
+    line = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.8), Inches(1.24), Inches(11.733), Pt(1.2))
     line.fill.solid()
     line.fill.fore_color.rgb = C_LINE
     line.line.fill.background()
@@ -165,7 +167,6 @@ def add_proportional_image(slide, path, left, top, max_width, max_height, border
     off_x = (max_width - w) / 2
     off_y = (max_height - h) / 2
 
-    # Marco sutil para el diagrama
     if border:
         frame = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left + off_x - Inches(0.04), top + off_y - Inches(0.04), w + Inches(0.08), h + Inches(0.08))
         frame.fill.solid()
@@ -211,86 +212,90 @@ def build_slide_01(prs):
     stripe.line.fill.background()
 
     # Kicker
-    k_box = slide.shapes.add_textbox(Inches(1.4), Inches(1.4), Inches(10.5), Inches(0.4))
+    k_box = slide.shapes.add_textbox(Inches(1.4), Inches(1.3), Inches(10.5), Inches(0.35))
     p_k = k_box.text_frame.paragraphs[0]
     p_k.text = "ARQUITECTURA DE SOFTWARE · SISTEMAS DISTRIBUIDOS Y NAVEGACIÓN INTELIGENTE"
     p_k.font.name = "Arial"
-    p_k.font.size = Pt(10)
+    p_k.font.size = Pt(10.5)
     p_k.font.bold = True
     p_k.font.color.rgb = C_TEAL
 
-    # Título principal
-    t_box = slide.shapes.add_textbox(Inches(1.4), Inches(1.85), Inches(10.5), Inches(1.5))
+    # Título principal (31 pt)
+    t_box = slide.shapes.add_textbox(Inches(1.4), Inches(1.72), Inches(10.5), Inches(1.4))
     tf_t = t_box.text_frame
     tf_t.word_wrap = True
     p_t = tf_t.paragraphs[0]
     p_t.text = "NexusNav: Arquitectura de Navegación y Enrutamiento Multimodal Dinámico"
     p_t.font.name = "Arial"
-    p_t.font.size = Pt(30)
+    p_t.font.size = Pt(31)
     p_t.font.bold = True
     p_t.font.color.rgb = C_WHITE
 
-    # Subtítulo explicativo
-    sub_box = slide.shapes.add_textbox(Inches(1.4), Inches(3.35), Inches(10.5), Inches(0.8))
+    # Subtítulo explicativo (14.5 pt)
+    sub_box = slide.shapes.add_textbox(Inches(1.4), Inches(3.18), Inches(10.5), Inches(0.8))
     tf_sub = sub_box.text_frame
     tf_sub.word_wrap = True
     p_sub = tf_sub.paragraphs[0]
     p_sub.text = "Estrategias de Optimización, Patrones de Diseño GoF, Poda Topológica Espacial y Telemetría Reactiva para Redes Urbanas de Alta Densidad"
     p_sub.font.name = "Arial"
-    p_sub.font.size = Pt(14)
+    p_sub.font.size = Pt(14.5)
     p_sub.font.color.rgb = RGBColor(203, 213, 225)
 
-    # Badges de atributos y estándares (Pills coloridos)
-    badges = [
-        ("PATRONES GOF (5)", C_TEAL),
+    # Badges de atributos y estándares: 2 filas balanceadas dentro de la tarjeta
+    badges_row1 = [
+        ("PATRONES DE DISEÑO GOF (5)", C_TEAL),
         ("PODA COMPOSITE (-53.79 %)", C_AMBER),
         ("CACHÉ ESPACIAL (4.13x)", C_CORAL),
-        ("EVALUACIÓN ATAM (SEI)", C_BLUE),
-        ("ISO/IEC 25010:2023", C_INDIGO),
     ]
-    cur_x = Inches(1.4)
-    for b_text, b_col in badges:
-        b_w = Inches(len(b_text) * 0.105 + 0.5)
-        pill = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, cur_x, Inches(4.35), b_w, Inches(0.38))
-        pill.fill.solid()
-        pill.fill.fore_color.rgb = b_col
-        pill.line.fill.background()
-        tf_b = pill.text_frame
-        tf_b.vertical_anchor = MSO_ANCHOR.MIDDLE
-        p_b = tf_b.paragraphs[0]
-        p_b.alignment = PP_ALIGN.CENTER
-        p_b.text = b_text
-        p_b.font.name = "Arial"
-        p_b.font.size = Pt(8.5)
-        p_b.font.bold = True
-        p_b.font.color.rgb = C_WHITE
-        cur_x += b_w + Inches(0.18)
+    badges_row2 = [
+        ("EVALUACIÓN FORMAL ATAM", C_BLUE),
+        ("ESTÁNDAR ISO/IEC 25010:2023", C_INDIGO),
+        ("TELEMETRÍA REACTIVA O(K)", C_SKY),
+    ]
+
+    for b_list, y_pos in [(badges_row1, Inches(4.18)), (badges_row2, Inches(4.70))]:
+        cur_x = Inches(1.4)
+        for b_text, b_col in b_list:
+            b_w = Inches(len(b_text) * 0.088 + 0.5)
+            pill = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, cur_x, y_pos, b_w, Inches(0.38))
+            pill.fill.solid()
+            pill.fill.fore_color.rgb = b_col
+            pill.line.fill.background()
+            tf_b = pill.text_frame
+            tf_b.vertical_anchor = MSO_ANCHOR.MIDDLE
+            p_b = tf_b.paragraphs[0]
+            p_b.alignment = PP_ALIGN.CENTER
+            p_b.text = b_text
+            p_b.font.name = "Arial"
+            p_b.font.size = Pt(9.5)
+            p_b.font.bold = True
+            p_b.font.color.rgb = C_WHITE
+            cur_x += b_w + Inches(0.20)
 
     # Autores y Equipo
-    auth_box = slide.shapes.add_textbox(Inches(1.4), Inches(5.3), Inches(10.5), Inches(0.8))
+    auth_box = slide.shapes.add_textbox(Inches(1.4), Inches(5.38), Inches(10.5), Inches(0.8))
     tf_a = auth_box.text_frame
     p_a1 = tf_a.paragraphs[0]
     p_a1.text = "Equipo de Proyecto y Arquitectura:"
     p_a1.font.name = "Arial"
-    p_a1.font.size = Pt(9.5)
+    p_a1.font.size = Pt(10)
     p_a1.font.color.rgb = C_MUTED
 
     p_a2 = tf_a.add_paragraph()
     p_a2.text = "Juan Carlos Benítez Rojas  ·  Juan José Córdoba Eraso"
     p_a2.font.name = "Arial"
-    p_a2.font.size = Pt(12)
+    p_a2.font.size = Pt(13.5)
     p_a2.font.bold = True
     p_a2.font.color.rgb = C_WHITE
 
 
 # ---------------------------------------------------------------------------
-# DIAPOSITIVA 2: Desafíos Arquitectónicos (Problema) - Patrón C de Referencia
+# DIAPOSITIVA 2: Desafíos Arquitectónicos (Problema)
 # ---------------------------------------------------------------------------
 def build_slide_02(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_slide_header(slide, "Desafíos Arquitectónicos en Navegación y Movilidad Urbana", "DELIMITACIÓN DEL PROBLEMA", 2)
 
-    # 3 Columnas principales (Pattern C de la imagen de referencia: 3 cards con badges circulares arriba)
     cards_data = [
         ("01", C_CORAL, "COMPLEJIDAD COMPUTACIONAL", "Explosión Combinatoria O(V log V + E)", [
             ("Búsqueda Global Exhaustiva:", "Algoritmos tradicionales sin orientación (Dijkstra) evalúan redes enteras de miles de nodos."),
@@ -310,31 +315,30 @@ def build_slide_02(prs):
     ]
 
     card_w = Inches(3.64)
-    card_h = Inches(5.6)
+    card_h = Inches(5.7)
     spacing = Inches(0.4)
     base_x = Inches(0.8)
-    base_y = Inches(1.5)
+    base_y = Inches(1.42)
 
     for i, (badge_num, badge_col, kicker, title, bullets) in enumerate(cards_data):
         x = base_x + i * (card_w + spacing)
-        # Card container
         add_card(slide, x, base_y, card_w, card_h, bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
 
-        # Franja superior de color
+        # Franja superior
         top_bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, base_y, card_w, Inches(0.08))
         top_bar.fill.solid()
         top_bar.fill.fore_color.rgb = badge_col
         top_bar.line.fill.background()
 
-        # Circular Badge centrado arriba
-        add_circular_badge(slide, x + Inches(0.35), base_y + Inches(0.35), Inches(0.7), badge_num, bg_color=badge_col, font_size=13)
+        # Circular Badge
+        add_circular_badge(slide, x + Inches(0.35), base_y + Inches(0.35), Inches(0.7), badge_num, bg_color=badge_col, font_size=13.5)
 
         # Kicker
         k_box = slide.shapes.add_textbox(x + Inches(1.2), base_y + Inches(0.38), Inches(2.2), Inches(0.25))
         p_k = k_box.text_frame.paragraphs[0]
         p_k.text = kicker
         p_k.font.name = "Arial"
-        p_k.font.size = Pt(8)
+        p_k.font.size = Pt(9)
         p_k.font.bold = True
         p_k.font.color.rgb = badge_col
 
@@ -345,45 +349,44 @@ def build_slide_02(prs):
         p_t = tf_t.paragraphs[0]
         p_t.text = title
         p_t.font.name = "Arial"
-        p_t.font.size = Pt(13.5)
+        p_t.font.size = Pt(14)
         p_t.font.bold = True
         p_t.font.color.rgb = C_NAVY_DARK
 
-        # Bullets
-        b_box = slide.shapes.add_textbox(x + Inches(0.35), base_y + Inches(2.1), Inches(2.94), Inches(3.2))
+        # Bullets aumentados a 11 pt
+        b_box = slide.shapes.add_textbox(x + Inches(0.35), base_y + Inches(2.1), Inches(2.94), Inches(3.4))
         tf_b = b_box.text_frame
         tf_b.word_wrap = True
         for j, (p_bold, p_text) in enumerate(bullets):
             p = tf_b.paragraphs[0] if j == 0 else tf_b.add_paragraph()
-            set_bullet_point(p, p_bold, p_text, font_size=10, bold_color=C_NAVY_DARK, text_color=C_BODY, space_after=8)
+            set_bullet_point(p, p_bold, p_text, font_size=11, bold_color=C_NAVY_DARK, text_color=C_BODY, space_after=8)
 
 
 # ---------------------------------------------------------------------------
-# DIAPOSITIVA 3: Justificación e Impacto - Patrón D Split Layout
+# DIAPOSITIVA 3: Justificación e Impacto Multidimensional
 # ---------------------------------------------------------------------------
 def build_slide_03(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_slide_header(slide, "Impacto Multidimensional y Relevancia Operativa", "JUSTIFICACIÓN ARQUITECTÓNICA", 3)
 
-    # Panel izquierdo oscuro destacado (Split Screen)
-    add_card(slide, Inches(0.8), Inches(1.5), Inches(4.5), Inches(5.5), bg_color=C_SLATE_HERO, border_color=None)
+    # Panel izquierdo oscuro destacado
+    add_card(slide, Inches(0.8), Inches(1.42), Inches(4.5), Inches(5.7), bg_color=C_SLATE_HERO, border_color=None)
 
-    # Contenido panel izquierdo
-    l_box = slide.shapes.add_textbox(Inches(1.2), Inches(1.9), Inches(3.7), Inches(4.7))
+    l_box = slide.shapes.add_textbox(Inches(1.2), Inches(1.75), Inches(3.7), Inches(4.8))
     tf_l = l_box.text_frame
     tf_l.word_wrap = True
 
     p1 = tf_l.paragraphs[0]
     p1.text = "VISIÓN ESTRATÉGICA"
     p1.font.name = "Arial"
-    p1.font.size = Pt(9.5)
+    p1.font.size = Pt(10)
     p1.font.bold = True
     p1.font.color.rgb = C_TEAL
 
     p2 = tf_l.add_paragraph()
     p2.text = "La Navegación como Servicio de Misión Crítica"
     p2.font.name = "Arial"
-    p2.font.size = Pt(20)
+    p2.font.size = Pt(21)
     p2.font.bold = True
     p2.font.color.rgb = C_WHITE
     p2.space_before = Pt(8)
@@ -392,12 +395,12 @@ def build_slide_03(prs):
     p3 = tf_l.add_paragraph()
     p3.text = "En operaciones de última milla, transporte de emergencia y flotas comerciales, un segundo de retraso en cruces complejos induce vacilación en conductores, demoras acumulativas y penalizaciones por incumplimiento de SLAs."
     p3.font.name = "Arial"
-    p3.font.size = Pt(11)
+    p3.font.size = Pt(12)
     p3.font.color.rgb = RGBColor(203, 213, 225)
     p3.space_after = Pt(20)
 
-    # Tarjeta métrica interna dorada
-    m_card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.2), Inches(4.7), Inches(3.7), Inches(1.8))
+    # Tarjeta métrica interna
+    m_card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.2), Inches(4.8), Inches(3.7), Inches(1.8))
     m_card.fill.solid()
     m_card.fill.fore_color.rgb = RGBColor(30, 41, 59)
     m_card.line.color.rgb = C_TEAL
@@ -409,7 +412,7 @@ def build_slide_03(prs):
     p_mc1.alignment = PP_ALIGN.CENTER
     p_mc1.text = "LATENCIA OBJETIVO SUB-MILISEGUNDO"
     p_mc1.font.name = "Arial"
-    p_mc1.font.size = Pt(8.5)
+    p_mc1.font.size = Pt(9)
     p_mc1.font.bold = True
     p_mc1.font.color.rgb = C_TEAL
 
@@ -417,11 +420,11 @@ def build_slide_03(prs):
     p_mc2.alignment = PP_ALIGN.CENTER
     p_mc2.text = "p50 < 0.35 ms  ·  Caché < 0.10 ms"
     p_mc2.font.name = "Arial"
-    p_mc2.font.size = Pt(13)
+    p_mc2.font.size = Pt(14)
     p_mc2.font.bold = True
     p_mc2.font.color.rgb = C_WHITE
 
-    # Panel derecho: Lista estructurada con viñetas circulares de colores
+    # Panel derecho con 4 cards
     right_x = Inches(5.7)
     items = [
         ("UX", C_TEAL, "Experiencia de Usuario y Conducción Segura",
@@ -435,41 +438,37 @@ def build_slide_03(prs):
     ]
 
     for i, (tag, col, h_title, h_desc) in enumerate(items):
-        y = Inches(1.5) + i * Inches(1.35)
-        # Card contenedor
-        add_card(slide, right_x, y, Inches(6.833), Inches(1.2), bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
+        y = Inches(1.42) + i * Inches(1.4)
+        add_card(slide, right_x, y, Inches(6.833), Inches(1.28), bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
 
-        # Circular Badge
-        add_circular_badge(slide, right_x + Inches(0.25), y + Inches(0.25), Inches(0.7), tag, bg_color=col, font_size=10.5)
+        add_circular_badge(slide, right_x + Inches(0.25), y + Inches(0.25), Inches(0.7), tag, bg_color=col, font_size=11)
 
-        # Texto del punto
-        t_box = slide.shapes.add_textbox(right_x + Inches(1.15), y + Inches(0.18), Inches(5.4), Inches(0.85))
+        t_box = slide.shapes.add_textbox(right_x + Inches(1.15), y + Inches(0.18), Inches(5.4), Inches(0.9))
         tf = t_box.text_frame
         tf.word_wrap = True
 
         pt1 = tf.paragraphs[0]
         pt1.text = h_title
         pt1.font.name = "Arial"
-        pt1.font.size = Pt(12.5)
+        pt1.font.size = Pt(13)
         pt1.font.bold = True
         pt1.font.color.rgb = C_NAVY_DARK
 
         pt2 = tf.add_paragraph()
         pt2.text = h_desc
         pt2.font.name = "Arial"
-        pt2.font.size = Pt(10)
+        pt2.font.size = Pt(11)
         pt2.font.color.rgb = C_BODY
-        pt2.space_before = Pt(2)
+        pt2.space_before = Pt(3)
 
 
 # ---------------------------------------------------------------------------
-# DIAPOSITIVA 4: Objetivos y Criterios Arquitectónicos - Patrón B
+# DIAPOSITIVA 4: Objetivos y Criterios Arquitectónicos
 # ---------------------------------------------------------------------------
 def build_slide_04(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_slide_header(slide, "Objetivos del Sistema y Requisitos de Calidad", "REQUISITOS Y ATRIBUTOS ISO/IEC 25010:2023", 4)
 
-    # 4 Cards verticales alineadas (Pattern B de referencia)
     objs = [
         ("OBJ 1", C_TEAL, "PODA ESPACIAL", "Poda Topológica Jerárquica",
          "Utilización de Recursos",
@@ -486,10 +485,10 @@ def build_slide_04(prs):
     ]
 
     card_w = Inches(2.7)
-    card_h = Inches(5.6)
+    card_h = Inches(5.7)
     spacing = Inches(0.31)
     base_x = Inches(0.8)
-    base_y = Inches(1.5)
+    base_y = Inches(1.42)
 
     for i, (badge_txt, col, tag, title, iso_attr, desc) in enumerate(objs):
         x = base_x + i * (card_w + spacing)
@@ -502,14 +501,14 @@ def build_slide_04(prs):
         top_bar.line.fill.background()
 
         # Circular Badge
-        add_circular_badge(slide, x + Inches(0.3), base_y + Inches(0.35), Inches(0.7), badge_txt, bg_color=col, font_size=10)
+        add_circular_badge(slide, x + Inches(0.3), base_y + Inches(0.35), Inches(0.7), badge_txt, bg_color=col, font_size=10.5)
 
         # Tag
-        tg_box = slide.shapes.add_textbox(x + Inches(1.15), base_y + Inches(0.4), Inches(1.35), Inches(0.25))
+        tg_box = slide.shapes.add_textbox(x + Inches(1.15), base_y + Inches(0.4), Inches(1.4), Inches(0.25))
         p_tg = tg_box.text_frame.paragraphs[0]
         p_tg.text = tag
         p_tg.font.name = "Arial"
-        p_tg.font.size = Pt(8)
+        p_tg.font.size = Pt(8.5)
         p_tg.font.bold = True
         p_tg.font.color.rgb = col
 
@@ -520,7 +519,7 @@ def build_slide_04(prs):
         p_t = tf_t.paragraphs[0]
         p_t.text = title
         p_t.font.name = "Arial"
-        p_t.font.size = Pt(13)
+        p_t.font.size = Pt(13.5)
         p_t.font.bold = True
         p_t.font.color.rgb = C_NAVY_DARK
 
@@ -536,18 +535,18 @@ def build_slide_04(prs):
         p_iso.alignment = PP_ALIGN.CENTER
         p_iso.text = f"ISO 25010: {iso_attr}"
         p_iso.font.name = "Arial"
-        p_iso.font.size = Pt(7.5)
+        p_iso.font.size = Pt(8)
         p_iso.font.bold = True
         p_iso.font.color.rgb = C_MUTED
 
-        # Descripción
-        d_box = slide.shapes.add_textbox(x + Inches(0.3), base_y + Inches(2.55), Inches(2.1), Inches(2.8))
+        # Descripción aumentada a 10.5 pt
+        d_box = slide.shapes.add_textbox(x + Inches(0.3), base_y + Inches(2.55), Inches(2.1), Inches(2.9))
         tf_d = d_box.text_frame
         tf_d.word_wrap = True
         p_d = tf_d.paragraphs[0]
         p_d.text = desc
         p_d.font.name = "Arial"
-        p_d.font.size = Pt(9.5)
+        p_d.font.size = Pt(10.5)
         p_d.font.color.rgb = C_BODY
         p_d.line_spacing = 1.2
 
@@ -559,10 +558,10 @@ def build_slide_05(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_slide_header(slide, "Arquitectura de Software: Vista de Componentes", "ESTRUCTURA MODULAR Y CAPAS", 5)
 
-    # Diagrama de componentes a la izquierda (Frame amplio)
-    add_proportional_image(slide, IMG_COMPONENTES, Inches(0.8), Inches(1.4), Inches(7.2), Inches(5.6))
+    # Diagrama de componentes a la izquierda
+    add_proportional_image(slide, IMG_COMPONENTES, Inches(0.8), Inches(1.4), Inches(7.2), Inches(5.7))
 
-    # Panel lateral derecho con 4 capas arquitectónicas
+    # Panel lateral derecho con 4 capas
     layers = [
         ("01", C_TEAL, "Capa de Presentación y Borde",
          "Mobile Vehicle Client, Fleet Dashboard y IoT Sensor Gateway consumen el sistema a través de un API Gateway REST (`/route`) y WebSockets (`/traffic-stream`)."),
@@ -576,41 +575,38 @@ def build_slide_05(prs):
 
     right_x = Inches(8.3)
     for i, (num, col, l_title, l_desc) in enumerate(layers):
-        y = Inches(1.4) + i * Inches(1.4)
-        add_card(slide, right_x, y, Inches(4.233), Inches(1.25), bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
+        y = Inches(1.42) + i * Inches(1.4)
+        add_card(slide, right_x, y, Inches(4.233), Inches(1.28), bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
 
-        # Badge
-        add_circular_badge(slide, right_x + Inches(0.2), y + Inches(0.2), Inches(0.55), num, bg_color=col, font_size=9)
+        add_circular_badge(slide, right_x + Inches(0.2), y + Inches(0.2), Inches(0.55), num, bg_color=col, font_size=10)
 
-        # Texto
-        t_box = slide.shapes.add_textbox(right_x + Inches(0.9), y + Inches(0.12), Inches(3.15), Inches(1.0))
+        t_box = slide.shapes.add_textbox(right_x + Inches(0.9), y + Inches(0.12), Inches(3.15), Inches(1.05))
         tf = t_box.text_frame
         tf.word_wrap = True
 
         pt1 = tf.paragraphs[0]
         pt1.text = l_title
         pt1.font.name = "Arial"
-        pt1.font.size = Pt(11)
+        pt1.font.size = Pt(12)
         pt1.font.bold = True
         pt1.font.color.rgb = C_NAVY_DARK
 
         pt2 = tf.add_paragraph()
         pt2.text = l_desc
         pt2.font.name = "Arial"
-        pt2.font.size = Pt(8.5)
+        pt2.font.size = Pt(9.5)
         pt2.font.color.rgb = C_BODY
         pt2.line_spacing = 1.15
         pt2.space_before = Pt(2)
 
 
 # ---------------------------------------------------------------------------
-# DIAPOSITIVA 6: Catálogo e Integración de los 5 Patrones GoF - Patrón F
+# DIAPOSITIVA 6: Catálogo e Integración de los 5 Patrones GoF
 # ---------------------------------------------------------------------------
 def build_slide_06(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_slide_header(slide, "Articulación y Sinergia de Patrones de Diseño GoF", "PATRONES DE DISEÑO GOF", 6)
 
-    # 5 Tarjetas horizontales de patrones (Diseño moderno tipo catálogo)
     patterns = [
         ("STRATEGY", C_TEAL, "Patrón de Comportamiento",
          "Intercambio Algorítmico Dinámico",
@@ -635,7 +631,7 @@ def build_slide_06(prs):
     ]
 
     card_w = Inches(11.733)
-    card_h = Inches(1.02)
+    card_h = Inches(1.04)
     base_x = Inches(0.8)
     base_y = Inches(1.4)
     spacing = Inches(0.12)
@@ -661,53 +657,53 @@ def build_slide_06(prs):
         p_pill.alignment = PP_ALIGN.CENTER
         p_pill.text = name
         p_pill.font.name = "Arial"
-        p_pill.font.size = Pt(9.5)
+        p_pill.font.size = Pt(10)
         p_pill.font.bold = True
         p_pill.font.color.rgb = C_WHITE
 
         # Tipo GoF y Título
-        t_box = slide.shapes.add_textbox(base_x + Inches(2.0), y + Inches(0.15), Inches(3.2), Inches(0.75))
+        t_box = slide.shapes.add_textbox(base_x + Inches(2.0), y + Inches(0.14), Inches(3.2), Inches(0.75))
         tf_t = t_box.text_frame
         p_t1 = tf_t.paragraphs[0]
         p_t1.text = p_type.upper()
         p_t1.font.name = "Arial"
-        p_t1.font.size = Pt(7.5)
+        p_t1.font.size = Pt(8)
         p_t1.font.bold = True
         p_t1.font.color.rgb = col
 
         p_t2 = tf_t.add_paragraph()
         p_t2.text = title
         p_t2.font.name = "Arial"
-        p_t2.font.size = Pt(11.5)
+        p_t2.font.size = Pt(12.5)
         p_t2.font.bold = True
         p_t2.font.color.rgb = C_NAVY_DARK
 
-        # Descripción técnica
-        d_box = slide.shapes.add_textbox(base_x + Inches(5.3), y + Inches(0.15), Inches(4.5), Inches(0.75))
+        # Descripción técnica (10 pt)
+        d_box = slide.shapes.add_textbox(base_x + Inches(5.3), y + Inches(0.14), Inches(4.5), Inches(0.78))
         tf_d = d_box.text_frame
         tf_d.word_wrap = True
         p_d = tf_d.paragraphs[0]
         p_d.text = desc
         p_d.font.name = "Arial"
-        p_d.font.size = Pt(9)
+        p_d.font.size = Pt(10)
         p_d.font.color.rgb = C_BODY
         p_d.line_spacing = 1.15
 
         # Tag ISO 25010
-        iso_box = slide.shapes.add_textbox(base_x + Inches(9.9), y + Inches(0.25), Inches(1.65), Inches(0.5))
+        iso_box = slide.shapes.add_textbox(base_x + Inches(9.9), y + Inches(0.22), Inches(1.65), Inches(0.55))
         tf_iso = iso_box.text_frame
         tf_iso.word_wrap = True
         p_i1 = tf_iso.paragraphs[0]
         p_i1.text = "ATRIBUTO ISO:"
         p_i1.font.name = "Arial"
-        p_i1.font.size = Pt(7)
+        p_i1.font.size = Pt(7.5)
         p_i1.font.bold = True
         p_i1.font.color.rgb = C_MUTED
 
         p_i2 = tf_iso.add_paragraph()
         p_i2.text = iso
         p_i2.font.name = "Arial"
-        p_i2.font.size = Pt(8.5)
+        p_i2.font.size = Pt(9)
         p_i2.font.bold = True
         p_i2.font.color.rgb = C_NAVY_DARK
 
@@ -720,33 +716,32 @@ def build_slide_07(prs):
     add_slide_header(slide, "Poda Topológica (Composite) e Iterador de Maniobras", "DESACOPLAMIENTO ALGORÍTMICO Y ESTRUCTURAL", 7)
 
     col_w = Inches(5.65)
-    col_h = Inches(5.5)
+    col_h = Inches(5.7)
 
-    # Columna Izquierda: Patrón Composite
+    # Columna Izquierda: Composite
     x_l = Inches(0.8)
-    add_card(slide, x_l, Inches(1.5), col_w, col_h, bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
+    add_card(slide, x_l, Inches(1.42), col_w, col_h, bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
 
-    # Franja superior Teal
-    sb_l = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x_l, Inches(1.5), col_w, Inches(0.08))
+    sb_l = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x_l, Inches(1.42), col_w, Inches(0.08))
     sb_l.fill.solid()
     sb_l.fill.fore_color.rgb = C_TEAL
     sb_l.line.fill.background()
 
-    add_circular_badge(slide, x_l + Inches(0.4), Inches(1.8), Inches(0.7), "CMP", bg_color=C_TEAL, font_size=11)
+    add_circular_badge(slide, x_l + Inches(0.4), Inches(1.75), Inches(0.7), "CMP", bg_color=C_TEAL, font_size=12)
 
-    t_box_l = slide.shapes.add_textbox(x_l + Inches(1.3), Inches(1.8), Inches(4.0), Inches(0.8))
+    t_box_l = slide.shapes.add_textbox(x_l + Inches(1.3), Inches(1.75), Inches(4.0), Inches(0.8))
     tf_tl = t_box_l.text_frame
     p_tl1 = tf_tl.paragraphs[0]
     p_tl1.text = "PATRÓN COMPOSITE (ESTRUCTURAL)"
     p_tl1.font.name = "Arial"
-    p_tl1.font.size = Pt(8.5)
+    p_tl1.font.size = Pt(9.5)
     p_tl1.font.bold = True
     p_tl1.font.color.rgb = C_TEAL
 
     p_tl2 = tf_tl.add_paragraph()
     p_tl2.text = "Jerarquización Vial y Poda Espacial"
     p_tl2.font.name = "Arial"
-    p_tl2.font.size = Pt(15)
+    p_tl2.font.size = Pt(16)
     p_tl2.font.bold = True
     p_tl2.font.color.rgb = C_NAVY_DARK
 
@@ -757,37 +752,37 @@ def build_slide_07(prs):
         ("Impacto de Rendimiento Medido:", "Logra una reducción neta del 53.79 % en los nodos explorados (25.0 frente a 54.1 nodos en Dijkstra), eliminando operaciones de cola.")
     ]
 
-    b_box_l = slide.shapes.add_textbox(x_l + Inches(0.4), Inches(2.7), Inches(4.85), Inches(4.1))
+    b_box_l = slide.shapes.add_textbox(x_l + Inches(0.4), Inches(2.65), Inches(4.85), Inches(4.2))
     tf_bl = b_box_l.text_frame
     tf_bl.word_wrap = True
     for i, (b_bold, b_txt) in enumerate(bullets_l):
         p = tf_bl.paragraphs[0] if i == 0 else tf_bl.add_paragraph()
-        set_bullet_point(p, b_bold, b_txt, font_size=10, space_after=12)
+        set_bullet_point(p, b_bold, b_txt, font_size=11, space_after=10)
 
-    # Columna Derecha: Patrón Iterator
+    # Columna Derecha: Iterator
     x_r = Inches(6.88)
-    add_card(slide, x_r, Inches(1.5), col_w, col_h, bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
+    add_card(slide, x_r, Inches(1.42), col_w, col_h, bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
 
-    sb_r = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x_r, Inches(1.5), col_w, Inches(0.08))
+    sb_r = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x_r, Inches(1.42), col_w, Inches(0.08))
     sb_r.fill.solid()
     sb_r.fill.fore_color.rgb = C_NAVY
     sb_r.line.fill.background()
 
-    add_circular_badge(slide, x_r + Inches(0.4), Inches(1.8), Inches(0.7), "ITR", bg_color=C_NAVY, font_size=11)
+    add_circular_badge(slide, x_r + Inches(0.4), Inches(1.75), Inches(0.7), "ITR", bg_color=C_NAVY, font_size=12)
 
-    t_box_r = slide.shapes.add_textbox(x_r + Inches(1.3), Inches(1.8), Inches(4.0), Inches(0.8))
+    t_box_r = slide.shapes.add_textbox(x_r + Inches(1.3), Inches(1.75), Inches(4.0), Inches(0.8))
     tf_tr = t_box_r.text_frame
     p_tr1 = tf_tr.paragraphs[0]
     p_tr1.text = "PATRÓN ITERATOR (COMPORTAMIENTO)"
     p_tr1.font.name = "Arial"
-    p_tr1.font.size = Pt(8.5)
+    p_tr1.font.size = Pt(9.5)
     p_tr1.font.bold = True
     p_tr1.font.color.rgb = C_NAVY
 
     p_tr2 = tf_tr.add_paragraph()
     p_tr2.text = "Travesía Uniforme y Desacoplada"
     p_tr2.font.name = "Arial"
-    p_tr2.font.size = Pt(15)
+    p_tr2.font.size = Pt(16)
     p_tr2.font.bold = True
     p_tr2.font.color.rgb = C_NAVY_DARK
 
@@ -798,12 +793,12 @@ def build_slide_07(prs):
         ("Sincronización en Caliente ante Desvíos:", "El método `update_route_path()` ajusta las maniobras pendientes tras un recálculo dinámico sin reiniciar el viaje del conductor.")
     ]
 
-    b_box_r = slide.shapes.add_textbox(x_r + Inches(0.4), Inches(2.7), Inches(4.85), Inches(4.1))
+    b_box_r = slide.shapes.add_textbox(x_r + Inches(0.4), Inches(2.65), Inches(4.85), Inches(4.2))
     tf_br = b_box_r.text_frame
     tf_br.word_wrap = True
     for i, (b_bold, b_txt) in enumerate(bullets_r):
         p = tf_br.paragraphs[0] if i == 0 else tf_br.add_paragraph()
-        set_bullet_point(p, b_bold, b_txt, font_size=10, space_after=12)
+        set_bullet_point(p, b_bold, b_txt, font_size=11, space_after=10)
 
 
 # ---------------------------------------------------------------------------
@@ -813,10 +808,10 @@ def build_slide_08(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_slide_header(slide, "Flujo de Navegación y Recálculo Dinámico (Secuencia UML)", "DINÁMICA TEMPORAL DEL SISTEMA", 8)
 
-    # Imagen del diagrama de secuencia centrada arriba (width ~7.6 in, height ~3.5 in)
-    add_proportional_image(slide, IMG_SECUENCIA, Inches(0.8), Inches(1.4), Inches(11.733), Inches(3.6))
+    # Imagen del diagrama de secuencia centrada arriba
+    add_proportional_image(slide, IMG_SECUENCIA, Inches(0.8), Inches(1.38), Inches(11.733), Inches(3.65))
 
-    # 3 Fases del proceso en la parte inferior (Ribbon / Flow cards - Pattern A)
+    # 3 Fases del proceso en la parte inferior
     phases = [
         ("FASE 1", C_TEAL, "Cálculo y Poda Inicial",
          "Petición al API Gateway -> Dispatcher ejecuta `NavigateCommand` -> Consulta en Caché Espacial -> `TopologyManager` podar grafo con Composite -> Cálculo A* -> Suscripción de observador."),
@@ -827,9 +822,9 @@ def build_slide_08(prs):
     ]
 
     p_w = Inches(3.64)
-    p_h = Inches(1.7)
+    p_h = Inches(1.85)
     base_x = Inches(0.8)
-    base_y = Inches(5.3)
+    base_y = Inches(5.2)
     sp = Inches(0.4)
 
     for i, (fase_tag, col, f_title, f_desc) in enumerate(phases):
@@ -853,7 +848,7 @@ def build_slide_08(prs):
         p_pill.alignment = PP_ALIGN.CENTER
         p_pill.text = fase_tag
         p_pill.font.name = "Arial"
-        p_pill.font.size = Pt(8.5)
+        p_pill.font.size = Pt(9)
         p_pill.font.bold = True
         p_pill.font.color.rgb = C_WHITE
 
@@ -862,18 +857,18 @@ def build_slide_08(prs):
         p_t = t_box.text_frame.paragraphs[0]
         p_t.text = f_title
         p_t.font.name = "Arial"
-        p_t.font.size = Pt(11)
+        p_t.font.size = Pt(12)
         p_t.font.bold = True
         p_t.font.color.rgb = C_NAVY_DARK
 
-        # Descripcion
-        d_box = slide.shapes.add_textbox(x + Inches(0.2), base_y + Inches(0.55), Inches(3.24), Inches(1.05))
+        # Descripcion (9.5 pt)
+        d_box = slide.shapes.add_textbox(x + Inches(0.2), base_y + Inches(0.55), Inches(3.24), Inches(1.2))
         tf_d = d_box.text_frame
         tf_d.word_wrap = True
         p_d = tf_d.paragraphs[0]
         p_d.text = f_desc
         p_d.font.name = "Arial"
-        p_d.font.size = Pt(8.5)
+        p_d.font.size = Pt(9.5)
         p_d.font.color.rgb = C_BODY
         p_d.line_spacing = 1.15
 
@@ -885,10 +880,8 @@ def build_slide_09(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_slide_header(slide, "Modelo de Dominio e Integración de Clases (UML)", "ESTRUCTURA INTERNA Y ACOPLAMIENTO", 9)
 
-    # Imagen del diagrama de clases a la izquierda (width ~7.2 in, height ~5.6 in)
-    add_proportional_image(slide, IMG_CLASES, Inches(0.8), Inches(1.4), Inches(7.2), Inches(5.6))
+    add_proportional_image(slide, IMG_CLASES, Inches(0.8), Inches(1.4), Inches(7.2), Inches(5.7))
 
-    # Panel derecho: Principios de diseño aplicados
     principles = [
         ("DIP", C_TEAL, "Inversión de Dependencias (DIP)",
          "El núcleo `RoutingEngine` interactúa exclusivamente con la abstracción `IRoutingStrategy`, permitiendo incorporar nuevas heurísticas bio-inspiradas sin tocar el motor."),
@@ -902,26 +895,26 @@ def build_slide_09(prs):
 
     right_x = Inches(8.3)
     for i, (tag, col, p_title, p_desc) in enumerate(principles):
-        y = Inches(1.4) + i * Inches(1.4)
-        add_card(slide, right_x, y, Inches(4.233), Inches(1.25), bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
+        y = Inches(1.42) + i * Inches(1.4)
+        add_card(slide, right_x, y, Inches(4.233), Inches(1.28), bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
 
-        add_circular_badge(slide, right_x + Inches(0.2), y + Inches(0.2), Inches(0.55), tag, bg_color=col, font_size=9)
+        add_circular_badge(slide, right_x + Inches(0.2), y + Inches(0.2), Inches(0.55), tag, bg_color=col, font_size=10)
 
-        t_box = slide.shapes.add_textbox(right_x + Inches(0.9), y + Inches(0.12), Inches(3.15), Inches(1.0))
+        t_box = slide.shapes.add_textbox(right_x + Inches(0.9), y + Inches(0.12), Inches(3.15), Inches(1.05))
         tf = t_box.text_frame
         tf.word_wrap = True
 
         pt1 = tf.paragraphs[0]
         pt1.text = p_title
         pt1.font.name = "Arial"
-        pt1.font.size = Pt(11)
+        pt1.font.size = Pt(12)
         pt1.font.bold = True
         pt1.font.color.rgb = C_NAVY_DARK
 
         pt2 = tf.add_paragraph()
         pt2.text = p_desc
         pt2.font.name = "Arial"
-        pt2.font.size = Pt(8.5)
+        pt2.font.size = Pt(9.5)
         pt2.font.color.rgb = C_BODY
         pt2.line_spacing = 1.15
         pt2.space_before = Pt(2)
@@ -934,10 +927,8 @@ def build_slide_10(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_slide_header(slide, "Lógica de Control y Supervisión Concurrente (Actividad UML)", "FLUJO ALGORÍTMICO Y COMPORTAMIENTO", 10)
 
-    # Imagen del diagrama de actividad a la izquierda (width ~7.2 in, height ~5.6 in)
-    add_proportional_image(slide, IMG_ACTIVIDAD, Inches(0.8), Inches(1.4), Inches(7.2), Inches(5.6))
+    add_proportional_image(slide, IMG_ACTIVIDAD, Inches(0.8), Inches(1.4), Inches(7.2), Inches(5.7))
 
-    # Panel derecho con compuertas de decisión
     gates = [
         ("01", C_TEAL, "Comprobación de Caché Espacial",
          "Acceso en memoria O(1). Si hay acierto (*Cache Hit*), la ruta se entrega en < 0.10 ms sin ejecutar ningún cálculo algorítmico sobre el grafo."),
@@ -951,26 +942,26 @@ def build_slide_10(prs):
 
     right_x = Inches(8.3)
     for i, (num, col, g_title, g_desc) in enumerate(gates):
-        y = Inches(1.4) + i * Inches(1.4)
-        add_card(slide, right_x, y, Inches(4.233), Inches(1.25), bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
+        y = Inches(1.42) + i * Inches(1.4)
+        add_card(slide, right_x, y, Inches(4.233), Inches(1.28), bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
 
-        add_circular_badge(slide, right_x + Inches(0.2), y + Inches(0.2), Inches(0.55), num, bg_color=col, font_size=9)
+        add_circular_badge(slide, right_x + Inches(0.2), y + Inches(0.2), Inches(0.55), num, bg_color=col, font_size=10)
 
-        t_box = slide.shapes.add_textbox(right_x + Inches(0.9), y + Inches(0.12), Inches(3.15), Inches(1.0))
+        t_box = slide.shapes.add_textbox(right_x + Inches(0.9), y + Inches(0.12), Inches(3.15), Inches(1.05))
         tf = t_box.text_frame
         tf.word_wrap = True
 
         pt1 = tf.paragraphs[0]
         pt1.text = g_title
         pt1.font.name = "Arial"
-        pt1.font.size = Pt(11)
+        pt1.font.size = Pt(12)
         pt1.font.bold = True
         pt1.font.color.rgb = C_NAVY_DARK
 
         pt2 = tf.add_paragraph()
         pt2.text = g_desc
         pt2.font.name = "Arial"
-        pt2.font.size = Pt(8.5)
+        pt2.font.size = Pt(9.5)
         pt2.font.color.rgb = C_BODY
         pt2.line_spacing = 1.15
         pt2.space_before = Pt(2)
@@ -983,7 +974,6 @@ def build_slide_11(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_slide_header(slide, "Prototipo Funcional y Entorno Experimental", "IMPLEMENTACIÓN Y VERIFICACIÓN EMPÍRICA", 11)
 
-    # 4 Cards cuadrantes representando el prototipo y pruebas (Reference Pattern E)
     cards = [
         ("01", C_TEAL, "TOPOLOGÍA SINTÉTICA", "Red Vial Urbana Multizona", [
             ("100 Intersecciones (Nodos):", "Distribuidas uniformemente en 4 macro-zonas (Zona Norte, Oriente, Occidente y Sur)."),
@@ -1008,11 +998,11 @@ def build_slide_11(prs):
     ]
 
     card_w = Inches(5.65)
-    card_h = Inches(2.65)
+    card_h = Inches(2.72)
     base_x = Inches(0.8)
-    base_y = Inches(1.5)
+    base_y = Inches(1.42)
     sp_x = Inches(0.43)
-    sp_y = Inches(0.25)
+    sp_y = Inches(0.24)
 
     for i, (num, col, kicker, title, bullets) in enumerate(cards):
         col_idx = i % 2
@@ -1028,7 +1018,7 @@ def build_slide_11(prs):
         bar.fill.fore_color.rgb = col
         bar.line.fill.background()
 
-        add_circular_badge(slide, x + Inches(0.25), y + Inches(0.25), Inches(0.55), num, bg_color=col, font_size=10)
+        add_circular_badge(slide, x + Inches(0.25), y + Inches(0.25), Inches(0.55), num, bg_color=col, font_size=11)
 
         # Kicker & Titulo
         t_box = slide.shapes.add_textbox(x + Inches(0.95), y + Inches(0.18), Inches(4.4), Inches(0.65))
@@ -1036,34 +1026,38 @@ def build_slide_11(prs):
         p1 = tf.paragraphs[0]
         p1.text = kicker
         p1.font.name = "Arial"
-        p1.font.size = Pt(8)
+        p1.font.size = Pt(9)
         p1.font.bold = True
         p1.font.color.rgb = col
 
         p2 = tf.add_paragraph()
         p2.text = title
         p2.font.name = "Arial"
-        p2.font.size = Pt(12)
+        p2.font.size = Pt(13)
         p2.font.bold = True
         p2.font.color.rgb = C_NAVY_DARK
 
-        # Bullets
-        b_box = slide.shapes.add_textbox(x + Inches(0.35), y + Inches(0.85), Inches(5.1), Inches(1.65))
+        # Bullets aumentados a 10.5 pt
+        b_box = slide.shapes.add_textbox(x + Inches(0.35), y + Inches(0.85), Inches(5.1), Inches(1.75))
         tf_b = b_box.text_frame
         tf_b.word_wrap = True
         for j, (p_bold, p_txt) in enumerate(bullets):
             p = tf_b.paragraphs[0] if j == 0 else tf_b.add_paragraph()
-            set_bullet_point(p, p_bold, p_txt, font_size=9.5, space_after=5)
+            set_bullet_point(p, p_bold, p_txt, font_size=10.5, space_after=5)
 
 
 # ---------------------------------------------------------------------------
 # DIAPOSITIVA 12: Resultados: Latencia y Nodos Explorados
 # ---------------------------------------------------------------------------
+def build_slide_02_metrics(slide):
+    pass
+
+
 def build_slide_12(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_slide_header(slide, "Resultados Experimentales: Latencia y Reducción del Grafo", "BENCHMARKING DE RENDIMIENTO", 12)
 
-    # Dos gráficas en la mitad izquierda y centro
+    # Dos gráficas a la izquierda
     add_proportional_image(slide, IMG_LATENCIA, Inches(0.8), Inches(1.4), Inches(4.6), Inches(3.6))
     add_proportional_image(slide, IMG_NODOS, Inches(5.6), Inches(1.4), Inches(4.6), Inches(3.6))
 
@@ -1078,7 +1072,7 @@ def build_slide_12(prs):
     p1.alignment = PP_ALIGN.CENTER
     p1.text = "PODA DE GRAFO"
     p1.font.name = "Arial"
-    p1.font.size = Pt(8.5)
+    p1.font.size = Pt(9)
     p1.font.bold = True
     p1.font.color.rgb = C_TEAL
 
@@ -1086,7 +1080,7 @@ def build_slide_12(prs):
     p2.alignment = PP_ALIGN.CENTER
     p2.text = "-53.79%"
     p2.font.name = "Arial"
-    p2.font.size = Pt(26)
+    p2.font.size = Pt(28)
     p2.font.bold = True
     p2.font.color.rgb = C_NAVY_DARK
 
@@ -1094,7 +1088,7 @@ def build_slide_12(prs):
     p3.alignment = PP_ALIGN.CENTER
     p3.text = "De 54.1 nodos evaluados en Dijkstra a solo 25.0 nodos en NexusNav gracias a la poda con Composite."
     p3.font.name = "Arial"
-    p3.font.size = Pt(8)
+    p3.font.size = Pt(9)
     p3.font.color.rgb = C_BODY
     p3.space_before = Pt(4)
 
@@ -1107,7 +1101,7 @@ def build_slide_12(prs):
     p4.alignment = PP_ALIGN.CENTER
     p4.text = "ACELERACIÓN"
     p4.font.name = "Arial"
-    p4.font.size = Pt(8.5)
+    p4.font.size = Pt(9)
     p4.font.bold = True
     p4.font.color.rgb = C_CORAL
 
@@ -1115,7 +1109,7 @@ def build_slide_12(prs):
     p5.alignment = PP_ALIGN.CENTER
     p5.text = "4.13x"
     p5.font.name = "Arial"
-    p5.font.size = Pt(26)
+    p5.font.size = Pt(28)
     p5.font.bold = True
     p5.font.color.rgb = C_NAVY_DARK
 
@@ -1123,18 +1117,18 @@ def build_slide_12(prs):
     p6.alignment = PP_ALIGN.CENTER
     p6.text = "Latencia mediana reducida de 0.33 ms a 0.08 ms sirviendo desde la Caché Espacial reactiva."
     p6.font.name = "Arial"
-    p6.font.size = Pt(8)
+    p6.font.size = Pt(9)
     p6.font.color.rgb = C_BODY
     p6.space_before = Pt(4)
 
-    # Tabla resumen inferior
-    t_card = add_card(slide, Inches(0.8), Inches(5.25), Inches(9.4), Inches(1.75), bg_color=C_CARD_ALT, border_color=C_BORDER_LIGHT)
+    # Tabla resumen inferior (9.5 pt)
+    t_card = add_card(slide, Inches(0.8), Inches(5.2), Inches(9.4), Inches(1.85), bg_color=C_CARD_ALT, border_color=C_BORDER_LIGHT)
     tf_t = t_card.text_frame
     tf_t.word_wrap = True
     p_t = tf_t.paragraphs[0]
     p_t.text = "TABLA COMPARATIVA DE RENDIMIENTO (100 CONSULTAS ORIGEN-DESTINO ALEATORIAS)"
     p_t.font.name = "Arial"
-    p_t.font.size = Pt(9)
+    p_t.font.size = Pt(10)
     p_t.font.bold = True
     p_t.font.color.rgb = C_NAVY_DARK
 
@@ -1146,7 +1140,7 @@ def build_slide_12(prs):
     ]
     for b_bold, b_txt in bullets_t:
         p = tf_t.add_paragraph()
-        set_bullet_point(p, b_bold, b_txt, font_size=8.5, space_after=2)
+        set_bullet_point(p, b_bold, b_txt, font_size=9.5, space_after=3)
 
 
 # ---------------------------------------------------------------------------
@@ -1171,7 +1165,7 @@ def build_slide_13(prs):
     p1.alignment = PP_ALIGN.CENTER
     p1.text = "CAUDAL MÁXIMO"
     p1.font.name = "Arial"
-    p1.font.size = Pt(8.5)
+    p1.font.size = Pt(9)
     p1.font.bold = True
     p1.font.color.rgb = C_BLUE
 
@@ -1179,7 +1173,7 @@ def build_slide_13(prs):
     p2.alignment = PP_ALIGN.CENTER
     p2.text = ">10 500"
     p2.font.name = "Arial"
-    p2.font.size = Pt(24)
+    p2.font.size = Pt(26)
     p2.font.bold = True
     p2.font.color.rgb = C_NAVY_DARK
 
@@ -1187,7 +1181,7 @@ def build_slide_13(prs):
     p3.alignment = PP_ALIGN.CENTER
     p3.text = "Rutas / segundo con Caché Activa. Modo Activo sostiene hasta 5 400 r/s (frente a 2 200 r/s de Dijkstra)."
     p3.font.name = "Arial"
-    p3.font.size = Pt(8)
+    p3.font.size = Pt(9)
     p3.font.color.rgb = C_BODY
     p3.space_before = Pt(4)
 
@@ -1200,7 +1194,7 @@ def build_slide_13(prs):
     p4.alignment = PP_ALIGN.CENTER
     p4.text = "DESVÍO PROACTIVO"
     p4.font.name = "Arial"
-    p4.font.size = Pt(8.5)
+    p4.font.size = Pt(9)
     p4.font.bold = True
     p4.font.color.rgb = C_AMBER
 
@@ -1208,7 +1202,7 @@ def build_slide_13(prs):
     p5.alignment = PP_ALIGN.CENTER
     p5.text = "0.66 ms"
     p5.font.name = "Arial"
-    p5.font.size = Pt(24)
+    p5.font.size = Pt(26)
     p5.font.bold = True
     p5.font.color.rgb = C_NAVY_DARK
 
@@ -1216,18 +1210,18 @@ def build_slide_13(prs):
     p6.alignment = PP_ALIGN.CENTER
     p6.text = "Cómputo algorítmico del desvío alternativo (2.69 ms acumulados con notificación y sincronización)."
     p6.font.name = "Arial"
-    p6.font.size = Pt(8)
+    p6.font.size = Pt(9)
     p6.font.color.rgb = C_BODY
     p6.space_before = Pt(4)
 
-    # Desglose temporal inferior
-    t_card = add_card(slide, Inches(0.8), Inches(5.25), Inches(9.4), Inches(1.75), bg_color=C_CARD_ALT, border_color=C_BORDER_LIGHT)
+    # Desglose temporal inferior (9.5 pt)
+    t_card = add_card(slide, Inches(0.8), Inches(5.2), Inches(9.4), Inches(1.85), bg_color=C_CARD_ALT, border_color=C_BORDER_LIGHT)
     tf_t = t_card.text_frame
     tf_t.word_wrap = True
     p_t = tf_t.paragraphs[0]
     p_t.text = "DESGLOSE TEMPORAL DEL CICLO REACTIVO ANTE INCIDENTES VIALES (INC-991)"
     p_t.font.name = "Arial"
-    p_t.font.size = Pt(9)
+    p_t.font.size = Pt(10)
     p_t.font.bold = True
     p_t.font.color.rgb = C_NAVY_DARK
 
@@ -1239,7 +1233,7 @@ def build_slide_13(prs):
     ]
     for b_bold, b_txt in bullets_t:
         p = tf_t.add_paragraph()
-        set_bullet_point(p, b_bold, b_txt, font_size=8.5, space_after=2)
+        set_bullet_point(p, b_bold, b_txt, font_size=9.5, space_after=3)
 
 
 # ---------------------------------------------------------------------------
@@ -1249,7 +1243,6 @@ def build_slide_14(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_slide_header(slide, "Evaluación Arquitectónica Formal: Método ATAM (SEI)", "EVALUACIÓN DE ATRIBUTOS DE CALIDAD", 14)
 
-    # 4 Cuadrantes ATAM (Utility Tree, Sensibilidades, Trade-offs, Riesgos)
     quads = [
         ("01", C_TEAL, "ÁRBOL DE UTILIDAD (UTILITY TREE)", "Escenarios de Calidad Priorizados", [
             ("Eficiencia de Desempeño (Alto/Medio):", "Latencia p95 < 2.0 ms bajo 100 consultas concurrentes usando poda Composite y A*."),
@@ -1275,11 +1268,11 @@ def build_slide_14(prs):
     ]
 
     card_w = Inches(5.65)
-    card_h = Inches(2.65)
+    card_h = Inches(2.72)
     base_x = Inches(0.8)
-    base_y = Inches(1.5)
+    base_y = Inches(1.42)
     sp_x = Inches(0.43)
-    sp_y = Inches(0.25)
+    sp_y = Inches(0.24)
 
     for i, (num, col, kicker, title, bullets) in enumerate(quads):
         col_idx = i % 2
@@ -1294,30 +1287,31 @@ def build_slide_14(prs):
         bar.fill.fore_color.rgb = col
         bar.line.fill.background()
 
-        add_circular_badge(slide, x + Inches(0.25), y + Inches(0.25), Inches(0.55), num, bg_color=col, font_size=10)
+        add_circular_badge(slide, x + Inches(0.25), y + Inches(0.25), Inches(0.55), num, bg_color=col, font_size=11)
 
         t_box = slide.shapes.add_textbox(x + Inches(0.95), y + Inches(0.18), Inches(4.4), Inches(0.65))
         tf = t_box.text_frame
         p1 = tf.paragraphs[0]
         p1.text = kicker
         p1.font.name = "Arial"
-        p1.font.size = Pt(8)
+        p1.font.size = Pt(9)
         p1.font.bold = True
         p1.font.color.rgb = col
 
         p2 = tf.add_paragraph()
         p2.text = title
         p2.font.name = "Arial"
-        p2.font.size = Pt(12)
+        p2.font.size = Pt(13)
         p2.font.bold = True
         p2.font.color.rgb = C_NAVY_DARK
 
-        b_box = slide.shapes.add_textbox(x + Inches(0.35), y + Inches(0.85), Inches(5.1), Inches(1.65))
+        # Bullets aumentados a 10 pt
+        b_box = slide.shapes.add_textbox(x + Inches(0.35), y + Inches(0.85), Inches(5.1), Inches(1.75))
         tf_b = b_box.text_frame
         tf_b.word_wrap = True
         for j, (p_bold, p_txt) in enumerate(bullets):
             p = tf_b.paragraphs[0] if j == 0 else tf_b.add_paragraph()
-            set_bullet_point(p, p_bold, p_txt, font_size=9, space_after=4)
+            set_bullet_point(p, p_bold, p_txt, font_size=10, space_after=3)
 
 
 # ---------------------------------------------------------------------------
@@ -1328,32 +1322,32 @@ def build_slide_15(prs):
     add_slide_header(slide, "Conclusiones Técnicas y Líneas de Evolución Futura", "SÍNTESIS Y CONCLUSIONES", 15)
 
     col_w = Inches(5.65)
-    col_h = Inches(5.5)
+    col_h = Inches(5.7)
 
     # Panel Izquierdo: Conclusiones
     x_l = Inches(0.8)
-    add_card(slide, x_l, Inches(1.5), col_w, col_h, bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
+    add_card(slide, x_l, Inches(1.42), col_w, col_h, bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
 
-    sb_l = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x_l, Inches(1.5), col_w, Inches(0.08))
+    sb_l = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x_l, Inches(1.42), col_w, Inches(0.08))
     sb_l.fill.solid()
     sb_l.fill.fore_color.rgb = C_TEAL
     sb_l.line.fill.background()
 
-    add_circular_badge(slide, x_l + Inches(0.4), Inches(1.8), Inches(0.7), "OK", bg_color=C_TEAL, font_size=11)
+    add_circular_badge(slide, x_l + Inches(0.4), Inches(1.75), Inches(0.7), "OK", bg_color=C_TEAL, font_size=12)
 
-    t_box_l = slide.shapes.add_textbox(x_l + Inches(1.3), Inches(1.8), Inches(4.0), Inches(0.8))
+    t_box_l = slide.shapes.add_textbox(x_l + Inches(1.3), Inches(1.75), Inches(4.0), Inches(0.8))
     tf_tl = t_box_l.text_frame
     p_tl1 = tf_tl.paragraphs[0]
     p_tl1.text = "LECCIONES Y LOGROS ARQUITECTÓNICOS"
     p_tl1.font.name = "Arial"
-    p_tl1.font.size = Pt(8.5)
+    p_tl1.font.size = Pt(9.5)
     p_tl1.font.bold = True
     p_tl1.font.color.rgb = C_TEAL
 
     p_tl2 = tf_tl.add_paragraph()
     p_tl2.text = "Conclusiones de la Arquitectura NexusNav"
     p_tl2.font.name = "Arial"
-    p_tl2.font.size = Pt(15)
+    p_tl2.font.size = Pt(16)
     p_tl2.font.bold = True
     p_tl2.font.color.rgb = C_NAVY_DARK
 
@@ -1364,37 +1358,37 @@ def build_slide_15(prs):
         ("Resiliencia en Tiempo Real:", "El ciclo proactivo de detección y desvío resolvió incidentes en 2.69 ms acumulados (0.66 ms de cómputo), garantizando continuidad de viaje.")
     ]
 
-    b_box_l = slide.shapes.add_textbox(x_l + Inches(0.4), Inches(2.7), Inches(4.85), Inches(4.1))
+    b_box_l = slide.shapes.add_textbox(x_l + Inches(0.4), Inches(2.65), Inches(4.85), Inches(4.2))
     tf_bl = b_box_l.text_frame
     tf_bl.word_wrap = True
     for i, (b_bold, b_txt) in enumerate(bullets_l):
         p = tf_bl.paragraphs[0] if i == 0 else tf_bl.add_paragraph()
-        set_bullet_point(p, b_bold, b_txt, font_size=10, space_after=12)
+        set_bullet_point(p, b_bold, b_txt, font_size=11, space_after=10)
 
     # Panel Derecho: Trabajo Futuro
     x_r = Inches(6.88)
-    add_card(slide, x_r, Inches(1.5), col_w, col_h, bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
+    add_card(slide, x_r, Inches(1.42), col_w, col_h, bg_color=C_CARD_BG, border_color=C_BORDER_LIGHT)
 
-    sb_r = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x_r, Inches(1.5), col_w, Inches(0.08))
+    sb_r = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x_r, Inches(1.42), col_w, Inches(0.08))
     sb_r.fill.solid()
     sb_r.fill.fore_color.rgb = C_BLUE
     sb_r.line.fill.background()
 
-    add_circular_badge(slide, x_r + Inches(0.4), Inches(1.8), Inches(0.7), "FUT", bg_color=C_BLUE, font_size=11)
+    add_circular_badge(slide, x_r + Inches(0.4), Inches(1.75), Inches(0.7), "FUT", bg_color=C_BLUE, font_size=12)
 
-    t_box_r = slide.shapes.add_textbox(x_r + Inches(1.3), Inches(1.8), Inches(4.0), Inches(0.8))
+    t_box_r = slide.shapes.add_textbox(x_r + Inches(1.3), Inches(1.75), Inches(4.0), Inches(0.8))
     tf_tr = t_box_r.text_frame
     p_tr1 = tf_tr.paragraphs[0]
     p_tr1.text = "EVOLUCIÓN Y ROADMAP TÉCNICO"
     p_tr1.font.name = "Arial"
-    p_tr1.font.size = Pt(8.5)
+    p_tr1.font.size = Pt(9.5)
     p_tr1.font.bold = True
     p_tr1.font.color.rgb = C_BLUE
 
     p_tr2 = tf_tr.add_paragraph()
     p_tr2.text = "Líneas de Evolución Futura"
     p_tr2.font.name = "Arial"
-    p_tr2.font.size = Pt(15)
+    p_tr2.font.size = Pt(16)
     p_tr2.font.bold = True
     p_tr2.font.color.rgb = C_NAVY_DARK
 
@@ -1405,12 +1399,12 @@ def build_slide_15(prs):
         ("Enrutamiento Multiobjetivo para Flotas Eléctricas:", "Incorporar modelos de consumo energético dependientes de topografía y puntos de recarga rápida con algoritmos de frontera de Pareto.")
     ]
 
-    b_box_r = slide.shapes.add_textbox(x_r + Inches(0.4), Inches(2.7), Inches(4.85), Inches(4.1))
+    b_box_r = slide.shapes.add_textbox(x_r + Inches(0.4), Inches(2.65), Inches(4.85), Inches(4.2))
     tf_br = b_box_r.text_frame
     tf_br.word_wrap = True
     for i, (b_bold, b_txt) in enumerate(bullets_r):
         p = tf_br.paragraphs[0] if i == 0 else tf_br.add_paragraph()
-        set_bullet_point(p, b_bold, b_txt, font_size=10, space_after=12)
+        set_bullet_point(p, b_bold, b_txt, font_size=11, space_after=10)
 
 
 # ---------------------------------------------------------------------------
@@ -1433,7 +1427,7 @@ def build_slide_16(prs):
     p_k = k_box.text_frame.paragraphs[0]
     p_k.text = "ARQUITECTURA DE SOFTWARE · REPOSITORIO Y ARTEFACTOS DEL PROYECTO"
     p_k.font.name = "Arial"
-    p_k.font.size = Pt(9.5)
+    p_k.font.size = Pt(10.5)
     p_k.font.bold = True
     p_k.font.color.rgb = C_TEAL
 
@@ -1442,7 +1436,7 @@ def build_slide_16(prs):
     p_t = t_box.text_frame.paragraphs[0]
     p_t.text = "NexusNav: Recursos y Acceso a la Plataforma"
     p_t.font.name = "Arial"
-    p_t.font.size = Pt(28)
+    p_t.font.size = Pt(30)
     p_t.font.bold = True
     p_t.font.color.rgb = C_WHITE
 
@@ -1460,17 +1454,17 @@ def build_slide_16(prs):
     ]
 
     card_w = Inches(3.38)
-    card_h = Inches(2.6)
+    card_h = Inches(2.65)
     sp = Inches(0.35)
     base_x = Inches(1.4)
-    base_y = Inches(2.6)
+    base_y = Inches(2.55)
 
     for i, (badge_txt, col, r_title, r_link, r_desc) in enumerate(resources):
         x = base_x + i * (card_w + sp)
         add_card(slide, x, base_y, card_w, card_h, bg_color=RGBColor(30, 41, 59), border_color=col, border_width=1.2)
 
         # Badge
-        pill = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x + Inches(0.25), base_y + Inches(0.25), Inches(1.1), Inches(0.32))
+        pill = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x + Inches(0.25), base_y + Inches(0.22), Inches(1.1), Inches(0.32))
         pill.fill.solid()
         pill.fill.fore_color.rgb = col
         pill.line.fill.background()
@@ -1480,48 +1474,48 @@ def build_slide_16(prs):
         p_pill.alignment = PP_ALIGN.CENTER
         p_pill.text = badge_txt
         p_pill.font.name = "Arial"
-        p_pill.font.size = Pt(8.5)
+        p_pill.font.size = Pt(9.5)
         p_pill.font.bold = True
         p_pill.font.color.rgb = C_WHITE
 
         # Titulo
-        t_box = slide.shapes.add_textbox(x + Inches(0.25), base_y + Inches(0.7), Inches(2.88), Inches(0.45))
+        t_box = slide.shapes.add_textbox(x + Inches(0.25), base_y + Inches(0.65), Inches(2.88), Inches(0.45))
         p_t = t_box.text_frame.paragraphs[0]
         p_t.text = r_title
         p_t.font.name = "Arial"
-        p_t.font.size = Pt(12)
+        p_t.font.size = Pt(13)
         p_t.font.bold = True
         p_t.font.color.rgb = C_WHITE
 
         # Enlace
-        l_box = slide.shapes.add_textbox(x + Inches(0.25), base_y + Inches(1.15), Inches(2.88), Inches(0.45))
+        l_box = slide.shapes.add_textbox(x + Inches(0.25), base_y + Inches(1.10), Inches(2.88), Inches(0.45))
         tf_l = l_box.text_frame
         tf_l.word_wrap = True
         p_l = tf_l.paragraphs[0]
         p_l.text = r_link
         p_l.font.name = "Arial"
-        p_l.font.size = Pt(8)
+        p_l.font.size = Pt(9)
         p_l.font.bold = True
         p_l.font.color.rgb = col
 
-        # Descripcion
-        d_box = slide.shapes.add_textbox(x + Inches(0.25), base_y + Inches(1.65), Inches(2.88), Inches(0.85))
+        # Descripcion (10.5 pt)
+        d_box = slide.shapes.add_textbox(x + Inches(0.25), base_y + Inches(1.60), Inches(2.88), Inches(0.95))
         tf_d = d_box.text_frame
         tf_d.word_wrap = True
         p_d = tf_d.paragraphs[0]
         p_d.text = r_desc
         p_d.font.name = "Arial"
-        p_d.font.size = Pt(8.5)
+        p_d.font.size = Pt(10.5)
         p_d.font.color.rgb = RGBColor(203, 213, 225)
         p_d.line_spacing = 1.15
 
     # Pie de autores
-    f_box = slide.shapes.add_textbox(Inches(1.4), Inches(5.5), Inches(10.5), Inches(0.5))
+    f_box = slide.shapes.add_textbox(Inches(1.4), Inches(5.45), Inches(10.5), Inches(0.5))
     tf_f = f_box.text_frame
     p_f = tf_f.paragraphs[0]
     p_f.text = "Arquitectura de Software  ·  Juan Carlos Benítez Rojas & Juan José Córdoba Eraso  ·  2026"
     p_f.font.name = "Arial"
-    p_f.font.size = Pt(10)
+    p_f.font.size = Pt(11)
     p_f.font.color.rgb = C_MUTED
 
 
