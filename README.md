@@ -100,6 +100,10 @@ nexusnav-routing-architecture/
 │   ├── convertir_pdf.ps1
 │   ├── Informe_Actividad6_Navegando_Mareas.docx
 │   └── Informe_Actividad6_Navegando_Mareas.pdf
+├── NexusNav_Presentacion_Arquitectura.pptx
+├── NexusNav_Presentacion_Arquitectura.pdf
+├── generar_diapositivas.py
+├── convertir_pptx_pdf.ps1
 └── README.md
 ```
 
@@ -109,7 +113,7 @@ nexusnav-routing-architecture/
 
 ### Prerrequisitos
 - Python 3.10 o superior.
-- Dependencias: `pip install matplotlib numpy python-docx pillow pypdf`
+- Dependencias: `pip install matplotlib numpy python-docx pillow pypdf python-pptx`
 
 ### 1. Ejecutar la Suite de Pruebas y Benchmarking
 ```bash
@@ -127,10 +131,18 @@ python informe/build_reporte.py
 powershell -ExecutionPolicy Bypass -File informe/convertir_pdf.ps1
 ```
 
+### 4. Generar Presentación de Diapositivas (PowerPoint y PDF)
+```bash
+python generar_diapositivas.py
+powershell -ExecutionPolicy Bypass -File convertir_pptx_pdf.ps1
+```
+
 ---
 
 ## 🎥 Documentación y Recursos
 
+- **Presentación de Diapositivas (PowerPoint):** [`NexusNav_Presentacion_Arquitectura.pptx`](NexusNav_Presentacion_Arquitectura.pptx)
+- **Presentación de Diapositivas (PDF 16:9):** [`NexusNav_Presentacion_Arquitectura.pdf`](NexusNav_Presentacion_Arquitectura.pdf)
 - **Informe Técnico de Arquitectura (PDF, 15 págs):** [`informe/Informe_Actividad6_Navegando_Mareas.pdf`](informe/Informe_Actividad6_Navegando_Mareas.pdf)
 - **Repositorio Oficial en GitHub:** [nexusnav-routing-architecture](https://github.com/Alboguaci/nexusnav-routing-architecture)
 - **Sustentación Técnica en Video (YouTube):** [Ver presentación y demostración del prototipo](https://youtu.be/IqVim9WxDhA)
