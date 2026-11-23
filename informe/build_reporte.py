@@ -39,7 +39,7 @@ AUTORES = (
 )
 INSTITUCION = "Corporación Escuela Tecnológica del Oriente"
 PROGRAMA = "Ingeniería de Software"
-CURSO = "Arquitectura de Software — Unidad 3"
+CURSO = "Arquitectura de Software"
 DOCENTE = "Leidy Johana Polo"
 FECHA = "20 de noviembre de 2026"
 RUNNING_HEAD = "ESTRATEGIAS DE NAVEGACIÓN EN ARQUITECTURA DE SOFTWARE"
@@ -514,10 +514,6 @@ def build_references(doc, references: str):
 # ---------------------------------------------------------------------------
 def main():
     body = BODY.read_text(encoding="utf-8")
-    abstract_block = (ROOT / "resumen.md").read_text(encoding="utf-8")
-    abstract_lines = [line.strip() for line in abstract_block.splitlines() if line.strip()]
-    abstract = abstract_lines[0]
-    keywords = abstract_lines[1].replace("Palabras clave:", "").strip()
     references = (ROOT / "referencias.md").read_text(encoding="utf-8")
 
     doc = Document()
@@ -540,13 +536,13 @@ def main():
         add_page_number_header(section)
 
     build_cover(doc)
-    build_abstract(doc, abstract, keywords)
+    # Resumen omitido por solicitud expresa de enfoque netamente técnico y directo
     build_toc_page(doc)
     parse_markdown(doc, body, references)
 
     doc.core_properties.title = f"{TITULO}. {SUBTITULO}"
     doc.core_properties.author = "Juan Carlos Benítez Rojas; Juan José Córdoba Eraso"
-    doc.core_properties.subject = "Actividad 6 — Arquitectura de Software"
+    doc.core_properties.subject = "Arquitectura de Software — Sistema NexusNav"
     doc.save(OUTPUT)
     print(f"OK -> {OUTPUT} ({OUTPUT.stat().st_size} bytes)")
 

@@ -1,31 +1,20 @@
-# §1§ Introducción y Contexto Institucional
+# §1§ Introducción y Marco Arquitectónico
 
-## §2§ Contexto y evolución del proyecto
+## §2§ Contexto y evolución del sistema NexusNav
 
-La ingeniería de software contemporánea exige que las arquitecturas distribuidas preserven atributos de calidad rigurosos frente a entornos dinámicos y sometidos a incertidumbre operacional continua. En la Corporación Escuela Tecnológica del Oriente, este proyecto consolida la trayectoria técnica iniciada en fases previas: tras formalizar los patrones estructurales de NexusAI (Actividad 2) y materializar su arquitectura distribuida de servicios y mensajería transaccional (Actividad 4), la presente Actividad 6 (*Navegando Mareas: Estrategias de Navegación en la Arquitectura de Software*) aborda la dimensión algorítmica y dinámica de la navegación inteligente mediante la concepción, modelado y evaluación empírica de **NexusNav**. Esta plataforma de enrutamiento multimodal de alto rendimiento para logística urbana adapta dinámicamente sus trayectorias en tiempo de ejecución ante congestión, accidentes y ventanas horarias de entrega sin degradar la latencia ni saturar el cómputo central.
+La ingeniería de software contemporánea exige que las arquitecturas distribuidas preserven atributos de calidad rigurosos frente a entornos dinámicos y sometidos a incertidumbre operacional continua. En este contexto, el presente desarrollo consolida el sistema **NexusNav**: una plataforma arquitectónica de enrutamiento multimodal de alto rendimiento para movilidad urbana inteligente. NexusNav aborda la dimensión algorítmica y dinámica de la navegación vehicular adaptando sus trayectorias en tiempo de ejecución ante congestión, incidentes intempestivos y restricciones operativas sin degradar la latencia de respuesta ni saturar el cómputo central del servidor.
 
-## §2§ Propósito del diseño y resultado de aprendizaje
+## §2§ Propósito y alcance de la solución arquitectónica
 
-El diseño propuesto responde directamente al resultado de aprendizaje de la Unidad 3: *"Evalúa arquitecturas de software, identificando oportunidades de mejora para optimizar el rendimiento y la escalabilidad de los sistemas desarrollados"*. Para alcanzar dicho propósito, NexusNav articula cinco patrones de diseño canónicos de la literatura clásica (Gamma et al., 1994) —Strategy, Command, Observer, Iterator y Composite— con tácticas arquitectónicas de desempeño (Cervantes & Kazman, 2016), particionamiento espacial jerárquico y caché reactiva. Esta integración mitiga la complejidad $O(V \log V + E)$ en grafos densos, confinando el cálculo a subgrafos podados y eliminando el sondeo continuo (*polling*) de clientes telemáticos. La calidad se evalúa bajo la norma ISO/IEC 25010:2023 (eficiencia de desempeño, fiabilidad y mantenibilidad) y mediante el método ATAM (*Architecture Tradeoff Analysis Method*) del SEI (Kazman et al., 2000).
+Para resolver los desafíos de escalabilidad y tiempo real, NexusNav articula cinco patrones de diseño canónicos de la literatura clásica (Gamma et al., 1994) —Strategy, Command, Observer, Iterator y Composite— con tácticas arquitectónicas de desempeño (Cervantes & Kazman, 2016), particionamiento espacial jerárquico y caché reactiva. Esta integración mitiga la complejidad $O(V \log V + E)$ en grafos densos, confinando el cálculo a subgrafos podados y eliminando el sondeo continuo (*polling*) de clientes telemáticos. La calidad arquitectónica se evalúa sistemáticamente bajo los atributos de la norma ISO/IEC 25010:2023 (eficiencia de desempeño, fiabilidad y mantenibilidad) y mediante el método ATAM (*Architecture Tradeoff Analysis Method*) del Software Engineering Institute (Kazman et al., 2000).
 
-## §2§ Objetivos del proyecto
+## §2§ Objetivos de la arquitectura
 
-El objetivo general consiste en diseñar, modelar mediante UML 2.5, implementar a nivel de prototipo funcional y evaluar cuantitativamente una arquitectura de software optimizada para navegación multimodal en NexusNav, integrando patrones de diseño especializados para asegurar alta eficiencia, escalabilidad y adaptabilidad dinámica ante perturbaciones viales. Específicamente, se busca: (a) delimitar un escenario logístico urbano y justificar su impacto en UX, rendimiento y eficiencia operativa; (b) fundamentar tácticas de optimización arquitectónica e ISO/IEC 25010:2023; (c) formalizar la arquitectura mediante diagramas de componentes, secuencia, clases y actividad; (d) justificar e integrar los patrones Strategy, Observer, Command, Iterator y Composite; (e) desarrollar un prototipo funcional en Python; (f) ejecutar una suite de benchmarking empírico de latencias y recálculos dinámicos; y (g) evaluar formalmente la arquitectura mediante el método ATAM del SEI.
+El objetivo principal consiste en diseñar, modelar mediante UML 2.5, implementar a nivel de prototipo funcional y evaluar cuantitativamente una arquitectura de software optimizada para navegación multimodal, integrando patrones de diseño especializados para asegurar alta eficiencia, escalabilidad y adaptabilidad dinámica ante perturbaciones viales. Específicamente, el desarrollo abarca: (a) la caracterización del escenario logístico urbano y su impacto en experiencia de usuario, latencia y eficiencia operativa; (b) la fundamentación de tácticas de optimización arquitectónica e ISO/IEC 25010:2023; (c) la formalización de la estructura mediante diagramas UML de componentes, secuencia, clases y actividad; (d) la articulación sinérgica de los patrones Strategy, Observer, Command, Iterator y Composite; (e) la implementación de un prototipo funcional en Python; (f) la ejecución de un banco de pruebas automatizado de latencias y recálculos reactivos; y (g) la evaluación formal de atributos de calidad mediante el método ATAM.
 
-## §2§ Asignación de roles y cronograma de trabajo
+## §2§ Estructura del equipo de arquitectura
 
-El proyecto fue desarrollado colaborativamente por Juan Carlos Benítez Rojas (*Líder de Proyecto* y *Diseñador de Arquitectura UML*, responsable de teoría, diagramas PlantUML, requisitos y análisis ATAM) y Juan José Córdoba Eraso (*Programador del Prototipo* e *Investigador de Patrones*, responsable del núcleo algorítmico en Python, benchmark automatizado y métricas de rendimiento).
-
-[[TABLA|Matriz de asignación de responsabilidades (RACI) y dedicación horaria]]
-
-| Fase o Entregable Clave | Líder y Diseñador UML | Programador e Investigador | Dedicación Horaria |
-|---|---|---|:---:|
-| Delimitación del problema y marco teórico | Responsable | Consultado | 11 hrs |
-| Modelado arquitectónico UML formal (PlantUML) | Responsable | Consultado | 7 hrs |
-| Implementación del prototipo ejecutable y patrones | Consultado | Responsable | 7 hrs |
-| Suite experimental de benchmark y métricas | Consultado | Responsable | 5 hrs |
-| Evaluación ATAM, consolidación de informe y video | Responsable | Responsable | 6 hrs |
-| **Total de Dedicación Efectiva** | — | — | **36 hrs** |
+El diseño, modelado e implementación de la arquitectura NexusNav fue desarrollado por el equipo técnico integrado por Juan Carlos Benítez Rojas (Líder de Arquitectura y Diseñador UML, a cargo de la formalización estructural, especificación de requisitos, modelos UML 2.5 y evaluación ATAM) y Juan José Córdoba Eraso (Ingeniero de Implementación e Investigador de Patrones, responsable del motor algorítmico en Python, banco de pruebas automatizado y telemetría reactiva).
 
 
 # §1§ Selección, Delimitación y Justificación del Problema de Navegación
@@ -162,7 +151,7 @@ Para garantizar la reproducibilidad técnica y la verificación empírica de la 
 
 ```bash
 # Acceso al entorno y ejecución de la suite experimental automatizada
-cd Actividad6_Navegando_Mareas/prototipo
+cd prototipo
 pip install matplotlib numpy
 python benchmark.py
 ```
@@ -254,7 +243,7 @@ Para asegurar la validez metodológica exigida en la Unidad 3, se aplicó el mé
 
 ## §2§ Conclusiones técnicas
 
-La ejecución del proyecto validó plenamente el resultado de aprendizaje de la Unidad 3: (a) la articulación de los patrones Strategy, Composite, Observer, Command e Iterator erradicó las deficiencias de los esquemas monolíticos, otorgando adaptabilidad y modularidad; (b) la poda topológica con Composite redujo en un **53.79 % los nodos explorados** por consulta frente a Dijkstra, abatiendo la complejidad computacional en grafos densos; (c) la capa de caché espacial reactiva alcanzó una latencia mediana de **0.08 ms** (aceleración de 4.13x) con caudal superior a 5 000 rutas/s; (d) el ciclo proactivo de detección, desvío y sincronización del iterador se resolvió en **2.69 ms acumulados** (0.69 ms de cómputo algorítmico); y (e) la evaluación ATAM confirmó que el balance entre sobrecarga de memoria y velocidad de cómputo asegura una arquitectura escalable, confiable y mantenible.
+La concepción, modelado y evaluación experimental de la arquitectura NexusNav demostró su efectividad integral en sistemas de navegación dinámica: (a) la articulación de los patrones Strategy, Composite, Observer, Command e Iterator erradicó las deficiencias de los esquemas monolíticos, otorgando adaptabilidad y modularidad; (b) la poda topológica con Composite redujo en un **53.79 % los nodos explorados** por consulta frente a Dijkstra, abatiendo la complejidad computacional en grafos densos; (c) la capa de caché espacial reactiva alcanzó una latencia mediana de **0.08 ms** (aceleración de 4.13x) con caudal superior a 5 000 rutas/s; (d) el ciclo proactivo de detección, desvío y sincronización del iterador se resolvió en **2.69 ms acumulados** (0.69 ms de cómputo algorítmico); y (e) la evaluación ATAM confirmó que el balance entre sobrecarga de memoria y velocidad de cómputo asegura una arquitectura escalable, confiable y mantenible.
 
 ## §2§ Trabajo futuro
 
@@ -264,14 +253,14 @@ Como líneas de evolución futura, se proyecta: (1) ajustar adaptativamente el f
 # §1§ Referencias
 
 
-# §1§ Anexos y Enlaces de Entrega
+# §1§ Enlaces a Recursos y Repositorio
 
 ## §2§ Repositorio de código fuente y artefactos del prototipo
 
 - **Repositorio oficial en GitHub:** `https://github.com/Alboguaci/nexusnav-routing-architecture`
 - **Contenido:** Código de patrones (`nexusnav/patterns/`), generador topológico (`graph_generator.py`), benchmark (`benchmark.py`), modelos PlantUML (`diagramas/`) y gráficas (`graficas/`).
 
-## §2§ Sustentación oral en video (Presentación del proyecto)
+## §2§ Sustentación en video de la arquitectura
 
 - **Enlace a la sustentación en YouTube (No listado):** `https://youtu.be/IqVim9WxDhA`
 - **Duración:** 14 minutos y 25 segundos.
