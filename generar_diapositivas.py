@@ -1408,7 +1408,7 @@ def build_slide_15(prs):
 
 
 # ---------------------------------------------------------------------------
-# DIAPOSITIVA 16: Cierre y Acceso a Recursos
+# DIAPOSITIVA 16: Síntesis de Validación y Cuadro de Mando Arquitectónico
 # ---------------------------------------------------------------------------
 def build_slide_16(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
@@ -1423,100 +1423,121 @@ def build_slide_16(prs):
     stripe.line.fill.background()
 
     # Kicker
-    k_box = slide.shapes.add_textbox(Inches(1.4), Inches(1.3), Inches(10.5), Inches(0.35))
+    k_box = slide.shapes.add_textbox(Inches(1.35), Inches(1.15), Inches(10.65), Inches(0.35))
     p_k = k_box.text_frame.paragraphs[0]
-    p_k.text = "ARQUITECTURA DE SOFTWARE · REPOSITORIO Y ARTEFACTOS DEL PROYECTO"
+    p_k.text = "ARQUITECTURA DE SOFTWARE · SÍNTESIS DE VALIDACIÓN Y GOBERNANZA"
     p_k.font.name = "Arial"
-    p_k.font.size = Pt(10.5)
+    p_k.font.size = Pt(10)
     p_k.font.bold = True
     p_k.font.color.rgb = C_TEAL
 
-    # Título
-    t_box = slide.shapes.add_textbox(Inches(1.4), Inches(1.7), Inches(10.5), Inches(0.8))
+    # Título principal
+    t_box = slide.shapes.add_textbox(Inches(1.35), Inches(1.48), Inches(10.65), Inches(0.65))
     p_t = t_box.text_frame.paragraphs[0]
-    p_t.text = "NexusNav: Recursos y Acceso a la Plataforma"
+    p_t.text = "NexusNav: Cuadro de Mando y Validación Arquitectónica Integral"
     p_t.font.name = "Arial"
-    p_t.font.size = Pt(30)
+    p_t.font.size = Pt(26)
     p_t.font.bold = True
     p_t.font.color.rgb = C_WHITE
 
-    # 3 Cards horizontales de recursos
-    resources = [
-        ("GITHUB", C_TEAL, "Código Fuente y Artefactos",
-         "https://github.com/Alboguaci/nexusnav-routing-architecture",
-         "Repositorio oficial con código de patrones GoF, generador de grafos, suite de benchmarking y modelos UML."),
-        ("YOUTUBE", C_CORAL, "Demostración Técnica en Video",
-         "https://youtu.be/IqVim9WxDhA (14 min 25 s)",
-         "Sustentación oral, recorrido arquitectónico de patrones, demostración en vivo del prototipo ejecutable y análisis de resultados."),
-        ("DOCS", C_BLUE, "Documento de Arquitectura Formal",
-         "Informe_Actividad6_Navegando_Mareas.pdf (15 págs)",
-         "Informe técnico exhaustivo con especificación de requisitos ISO 25010, modelos PlantUML, evaluación formal ATAM y referencias.")
+    # Subtítulo de cierre
+    sub_box = slide.shapes.add_textbox(Inches(1.35), Inches(2.15), Inches(10.65), Inches(0.35))
+    p_sub = sub_box.text_frame.paragraphs[0]
+    p_sub.text = "Balance Técnico Cuantitativo: Sinergia de Patrones GoF, Poda Espacial, Caché Sub-milisegundo y ATAM"
+    p_sub.font.name = "Arial"
+    p_sub.font.size = Pt(12)
+    p_sub.font.color.rgb = RGBColor(203, 213, 225)
+
+    # 4 Pilares Técnicos Cuantitativos (Scorecard Ejecutivo)
+    pillars = [
+        ("01", C_TEAL, "PODA ESPACIAL", "-53.79%", "REDUCCIÓN DE NODOS",
+         "Composite jerarquiza la red en macro-zonas y arterias, reduciendo de 54.1 a 25.0 nodos evaluados y abatiendo la complejidad combinatoria."),
+        ("02", C_CORAL, "CACHÉ REACTIVA", "0.08 ms", "LATENCIA MEDIANA (4.13x)",
+         "Almacenamiento LRU/TTL en memoria con despacho sub-milisegundo ultra-estable y caudal pico superior a 10 500 rutas por segundo."),
+        ("03", C_AMBER, "DESVÍO PROACTIVO", "0.66 ms", "CÓMPUTO DE RE-ENRUTAMIENTO",
+         "Bus de eventos reactivo O(K) que alerta solo a vehículos afectados y recalcula desvíos dinámicos en 2.69 ms acumulados."),
+        ("04", C_BLUE, "CLEAN ARCHITECTURE", "100%", "DESACOPLAMIENTO ESTRUCTURAL",
+         "Interfaces DIP (IRoutingStrategy) para conmutación de heurísticas en caliente y consumo secuencial vía iterador desacoplado del grafo.")
     ]
 
-    card_w = Inches(3.38)
-    card_h = Inches(2.65)
-    sp = Inches(0.35)
-    base_x = Inches(1.4)
-    base_y = Inches(2.55)
+    card_w = Inches(2.51)
+    card_h = Inches(2.85)
+    sp = Inches(0.20)
+    base_x = Inches(1.35)
+    base_y = Inches(2.60)
 
-    for i, (badge_txt, col, r_title, r_link, r_desc) in enumerate(resources):
+    for i, (badge_num, col, kicker, metric, metric_lbl, desc) in enumerate(pillars):
         x = base_x + i * (card_w + sp)
         add_card(slide, x, base_y, card_w, card_h, bg_color=RGBColor(30, 41, 59), border_color=col, border_width=1.2)
 
-        # Badge
-        pill = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x + Inches(0.25), base_y + Inches(0.22), Inches(1.1), Inches(0.32))
-        pill.fill.solid()
-        pill.fill.fore_color.rgb = col
-        pill.line.fill.background()
-        tf_p = pill.text_frame
-        tf_p.vertical_anchor = MSO_ANCHOR.MIDDLE
-        p_pill = tf_p.paragraphs[0]
-        p_pill.alignment = PP_ALIGN.CENTER
-        p_pill.text = badge_txt
-        p_pill.font.name = "Arial"
-        p_pill.font.size = Pt(9.5)
-        p_pill.font.bold = True
-        p_pill.font.color.rgb = C_WHITE
+        # Franja superior
+        top_bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, base_y, card_w, Inches(0.06))
+        top_bar.fill.solid()
+        top_bar.fill.fore_color.rgb = col
+        top_bar.line.fill.background()
 
-        # Titulo
-        t_box = slide.shapes.add_textbox(x + Inches(0.25), base_y + Inches(0.65), Inches(2.88), Inches(0.45))
-        p_t = t_box.text_frame.paragraphs[0]
-        p_t.text = r_title
-        p_t.font.name = "Arial"
-        p_t.font.size = Pt(13)
-        p_t.font.bold = True
-        p_t.font.color.rgb = C_WHITE
+        # Circular Badge
+        add_circular_badge(slide, x + Inches(0.20), base_y + Inches(0.22), Inches(0.52), badge_num, bg_color=col, font_size=10)
 
-        # Enlace
-        l_box = slide.shapes.add_textbox(x + Inches(0.25), base_y + Inches(1.10), Inches(2.88), Inches(0.45))
-        tf_l = l_box.text_frame
-        tf_l.word_wrap = True
-        p_l = tf_l.paragraphs[0]
-        p_l.text = r_link
-        p_l.font.name = "Arial"
-        p_l.font.size = Pt(9)
-        p_l.font.bold = True
-        p_l.font.color.rgb = col
+        # Kicker de tarjeta
+        k_b = slide.shapes.add_textbox(x + Inches(0.85), base_y + Inches(0.25), Inches(1.5), Inches(0.3))
+        pk = k_b.text_frame.paragraphs[0]
+        pk.text = kicker
+        pk.font.name = "Arial"
+        pk.font.size = Pt(8)
+        pk.font.bold = True
+        pk.font.color.rgb = col
 
-        # Descripcion (10.5 pt)
-        d_box = slide.shapes.add_textbox(x + Inches(0.25), base_y + Inches(1.60), Inches(2.88), Inches(0.95))
-        tf_d = d_box.text_frame
+        # Métrica Principal Gigante
+        m_b = slide.shapes.add_textbox(x + Inches(0.18), base_y + Inches(0.70), Inches(2.15), Inches(0.55))
+        pm = m_b.text_frame.paragraphs[0]
+        pm.alignment = PP_ALIGN.CENTER
+        pm.text = metric
+        pm.font.name = "Arial"
+        pm.font.size = Pt(24)
+        pm.font.bold = True
+        pm.font.color.rgb = C_WHITE
+
+        # Etiqueta de la Métrica
+        l_b = slide.shapes.add_textbox(x + Inches(0.15), base_y + Inches(1.25), Inches(2.21), Inches(0.3))
+        pl = l_b.text_frame.paragraphs[0]
+        pl.alignment = PP_ALIGN.CENTER
+        pl.text = metric_lbl
+        pl.font.name = "Arial"
+        pl.font.size = Pt(7.5)
+        pl.font.bold = True
+        pl.font.color.rgb = col
+
+        # Descripción
+        d_b = slide.shapes.add_textbox(x + Inches(0.18), base_y + Inches(1.58), Inches(2.15), Inches(1.15))
+        tf_d = d_b.text_frame
         tf_d.word_wrap = True
-        p_d = tf_d.paragraphs[0]
-        p_d.text = r_desc
-        p_d.font.name = "Arial"
-        p_d.font.size = Pt(10.5)
-        p_d.font.color.rgb = RGBColor(203, 213, 225)
-        p_d.line_spacing = 1.15
+        pd = tf_d.paragraphs[0]
+        pd.text = desc
+        pd.font.name = "Arial"
+        pd.font.size = Pt(9.5)
+        pd.font.color.rgb = RGBColor(203, 213, 225)
+        pd.line_spacing = 1.15
 
-    # Pie de autores
-    f_box = slide.shapes.add_textbox(Inches(1.4), Inches(5.45), Inches(10.5), Inches(0.5))
-    tf_f = f_box.text_frame
-    p_f = tf_f.paragraphs[0]
-    p_f.text = "Arquitectura de Software  ·  Juan Carlos Benítez Rojas & Juan José Córdoba Eraso  ·  2026"
-    p_f.font.name = "Arial"
-    p_f.font.size = Pt(11)
-    p_f.font.color.rgb = C_MUTED
+    # Franja inferior de conclusión y gobernanza
+    foot_card = add_card(slide, Inches(1.35), Inches(5.62), Inches(10.65), Inches(0.80), bg_color=RGBColor(15, 23, 42), border_color=C_TEAL, border_width=1.0)
+    tf_f = foot_card.text_frame
+    tf_f.word_wrap = True
+    tf_f.vertical_anchor = MSO_ANCHOR.MIDDLE
+
+    p_f1 = tf_f.paragraphs[0]
+    p_f1.text = "SÍNTESIS DE GOBERNANZA ARQUITECTÓNICA (MÉTODO ATAM · NORMA ISO/IEC 25010:2023)"
+    p_f1.font.name = "Arial"
+    p_f1.font.size = Pt(8.5)
+    p_f1.font.bold = True
+    p_f1.font.color.rgb = C_TEAL
+
+    p_f2 = tf_f.add_paragraph()
+    p_f2.text = "La arquitectura NexusNav demostró un compromiso óptimo entre memoria y latencia, garantizando resiliencia operacional continua, inmunidad ante la sobrecarga de sondeo y modificabilidad certificada para sistemas logísticos metropolitanos."
+    p_f2.font.name = "Arial"
+    p_f2.font.size = Pt(9.5)
+    p_f2.font.color.rgb = RGBColor(241, 245, 249)
+    p_f2.space_before = Pt(2)
 
 
 # ---------------------------------------------------------------------------
