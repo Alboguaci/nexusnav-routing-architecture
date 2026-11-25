@@ -141,4 +141,4 @@ powershell -ExecutionPolicy Bypass -File convertir_pptx_pdf.ps1
 
 - **Informe Técnico de Arquitectura (PDF, 15 págs):** [`informe/Informe_Actividad6_Navegando_Mareas.pdf`](informe/Informe_Actividad6_Navegando_Mareas.pdf)
 - **Repositorio Oficial en GitHub:** [nexusnav-routing-architecture](https://github.com/Alboguaci/nexusnav-routing-architecture)
-* **Sustentación en Video:** *(Pendiente de publicación por el equipo)*
+- **Sustentación en Video (YouTube):** [https://youtu.be/hVVVCTxcKHQ](https://youtu.be/hVVVCTxcKHQ)

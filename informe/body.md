@@ -262,7 +262,7 @@ Como líneas de evolución futura, se proyecta: (1) ajustar adaptativamente el f
 
 ## §2§ Sustentación en video de la arquitectura
 
-- **Enlace a la sustentación en YouTube (No listado):** `[Pendiente de publicación tras grabación final]`
-- **Duración:** 14 minutos y 25 segundos.
+- **Enlace a la sustentación en YouTube (No listado):** [https://youtu.be/hVVVCTxcKHQ](https://youtu.be/hVVVCTxcKHQ)
+- **Duración:** 13 minutos y 13 segundos (792.9 segundos).
 - **Expositores:** Juan Carlos Benítez Rojas y Juan José Córdoba Eraso.
 - **Estructura:** Problema abordado, arquitectura y modelos UML, justificación de patrones, demostración del prototipo ejecutable, resultados experimentales y conclusiones.
